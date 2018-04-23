@@ -56,8 +56,11 @@
   >name
  +Delete CRUD
  +Apply permissions
- *Role Mode Permissions
+ +View Index
+ +Role Model Permissions
  *Edit Crud using fieldsinfo
- *dump sql 
+ +dump sql
+ *add foreign key to role_permission add unsigned
+ +Permissions for delete
 
 

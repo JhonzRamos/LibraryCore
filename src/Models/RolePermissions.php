@@ -5,6 +5,8 @@ namespace Laraveldaily\Quickadmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
+
 class RolePermissions extends Model
 {
     protected $table = 'role_permissions';
@@ -14,4 +16,9 @@ class RolePermissions extends Model
         'menu_id',
         'permission_id',
     ];
+
+    public function menus()
+    {
+        return $this->belongsTo('Laraveldaily\Quickadmin\Models\Menu', 'menu_id', 'id');
+    }
 }

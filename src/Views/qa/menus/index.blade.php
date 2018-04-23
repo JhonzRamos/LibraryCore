@@ -208,7 +208,7 @@
                     <h3 class="box-title">Menu Type</h3>
                 </div >
                 <div class="box-body">
-                    <table class="table table-striped table-hover" width="100%"  id="MenuDataTable">
+                    <table class="table table-striped table-hover table-bordered" width="100%"  id="MenuDataTable">
                         <thead>
                         <th>ID</th>
                         <th>Name</th>

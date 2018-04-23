@@ -118,7 +118,7 @@
             </div>
             <em><b>Notice:</b> you <strong>don't</strong> need to add <b>ID</b> and <b>Timestamps</b> fields - they are added automatically.</em>
 
-            <table class="table">
+            <table class="table table-bordered">
                 <thead>
                     <th>Field Type</th>
                     <th>Database column</th>
@@ -159,7 +159,7 @@
         <div class="panel-body">
 
 
-                    <table class="table table-bordered">
+                    <table class="table table-bordered ">
                         <thead>
                         <tr>
                             <th>Role</th>
@@ -403,6 +403,27 @@
 
 
         $(document).ready(function () {
+
+            $(function(){
+                var $foo = $('#name');
+                var $bar = $('#title');
+                function onChange() {
+                    $bar.val($foo.val());
+                };
+                $('#name').change(onChange).keyup(onChange);
+            });
+
+
+
+            $(document).on('change', '.field_title', function () {
+                var $foo = $(this);
+                var $bar =$(this).parent().parent().find('.visual_title');
+                function onChange() {
+                    $bar.val($foo.val());
+                };
+                $(this).change(onChange).keyup(onChange);
+            }).change();
+
             $("#generator").sortable();
 
 //            $('.relationship').each(function () {
@@ -411,8 +432,6 @@
 
             $('.type').each(function () { //initialize
                 typeChange($(this))
-
-
 //                $(this).parent().parent().parent().find('.list_hid').val(1);
             });
 
@@ -421,6 +440,11 @@
                 relationshipChange($(this))
             });
 
+
+//            $(document).on('keypress', '.field_title', function () {
+//                if ($(this).which == 32)
+//                    return false;
+//            });
 
 
             $(document).on('change', '.add2', function () {

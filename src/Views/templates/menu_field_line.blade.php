@@ -9,7 +9,7 @@
         </select>
     </td>
     <td>
-        <input type="text" name="f_title[]" value="{{ old('f_title.'.$index) }}" class="form-control title"
+        <input type="text" name="f_title[]" value="{{ old('f_title.'.$index) }}" class="form-control title field_title"
                required="required" placeholder="{{ trans('quickadmin::templates.templates-menu_field_line-field_db_name') }}">
 
         <!-- File size limit -->
@@ -72,7 +72,7 @@
         <!-- /ENUM values -->
     </td>
     <td>
-        <input type="text" name="f_label[]" value="{{ old('f_label.'.$index) }}" class="form-control"
+        <input type="text" name="f_label[]" value="{{ old('f_label.'.$index) }}" class="form-control visual_title"
                required="required" placeholder="{{ trans('quickadmin::templates.templates-menu_field_line-field_visual_title_placeholder') }}">
         <input type="text" name="f_helper[]" value="{{ old('f_helper.'.$index) }}" class="form-control"
                placeholder="{{ trans('quickadmin::templates.templates-menu_field_line-comment_below_placeholder') }}">
