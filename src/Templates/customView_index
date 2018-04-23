@@ -1,0 +1,14 @@
+@extends('admin.layouts.master')
+
+@section('content')
+
+	<div class="panel panel-default">
+      <div class="panel-heading">
+      {{ trans('quickadmin::templates.templates-customView_index-list') }}
+      </div>
+      <div class="panel-body">
+        {{ trans('quickadmin::templates.templates-customView_index-welcome_custom_view') }}
+      </div>
+    </div>
+
+@endsection

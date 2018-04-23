@@ -1,0 +1,7 @@
+<div class="form-group">
+    {!! Form::label('$LABEL$', '$TITLE$', array('class'=>'control-label')) !!}
+
+        {!! Form::select('$LABEL$', $$LABEL$, old('$LABEL$'), array('class'=>'form-control select2' , 'width'=>'100'  ,'disabled'=> isset($view) ? true : false)) !!}
+        $HELPER$
+
+</div>

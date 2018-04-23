@@ -1,0 +1,7 @@
+<div class="form-group">
+    {!! Form::label('$LABEL$', '$TITLE$', array('class'=>'control-label')) !!}
+        {!! Form::file('$LABEL$') !!}
+        {!! Form::hidden('$LABEL$_w', $WIDTH$) !!}
+        {!! Form::hidden('$LABEL$_h', $HEIGHT$) !!}
+        $HELPER$
+</div>

@@ -1,0 +1,8 @@
+<div class="form-group">
+    {!! Form::label('$LABEL$', '$TITLE$', array('class'=>'control-label')) !!}
+
+        {!! Form::hidden('$LABEL$','') !!}
+        {!! Form::checkbox('$LABEL$', 1, $STATE$) !!}
+        $HELPER$
+
+</div>

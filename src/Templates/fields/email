@@ -1,0 +1,7 @@
+<div class="form-group">
+    {!! Form::label('$LABEL$', '$TITLE$', array('class'=>'control-label')) !!}
+
+        {!! Form::email('$LABEL$', old('$LABEL$'), array('class'=>'form-control','disabled'=> isset($view) ? true : false)) !!}
+        $HELPER$
+
+</div>

@@ -1,0 +1,16 @@
+<div class="form-group">
+    {!! Form::label('$LABEL$', '$TITLE$', array('class'=>'control-label')) !!}
+
+          <div class="input-group">
+
+                      {!! Form::text('$LABEL$', old('$LABEL$'), array('class'=>'form-control timepicker','disabled'=> isset($view) ? true : false)) !!}
+
+
+                      <div class="input-group-addon">
+                                           <i class="fa fa-clock-o"></i>
+                                          </div>
+
+
+                </div>
+            $HELPER$
+</div>

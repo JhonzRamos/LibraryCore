@@ -1,0 +1,63 @@
+04/18/2018
+>Menu Index
+ + Drag n drop GUI
+ + Add Data Table
+ + Delete icon with route
+>Routes
+ +delete index
+>custom.js
+ + Toggle for columns
+>data table.css
+>Menu Controller
+ +buildtable - add toggle
+>Generated Views
+ + edit/create inside a .box div
+ + index custom table (datatable.css)
+04/19/2018
+>Generated Views Index
+ + edit route
+ + delete route
+>Modal
+ +Delete Modal
+ +fields
+ +fix relationship
+ +mass delete for relationship
+ +javascript for crud table
+ +remove sort on first and last column
+ +searchable working
+ +list
+04/22/2018
+ +status
+ -dateRender
+ +view disable
+ +remove view update button
+ *disable a tinyMCE
+ *toggle cannot update
+ *photo view
+ *file view
+ *checkbox view
+ *radio view
+ *radio table render value
+ *true ==
+ *false ==
+ *show in edit
+ *show in form
+ *add ? fillable
+ *Validation Create Request
+ *Update Request edit remove required in UpdateRequest
+ +checkbox list
+ +role_permission
+  >id
+  >role_id
+  >permission_id
+  >menu_id
+ +permissions
+  >id
+  >name
+ +Delete CRUD
+ +Apply permissions
+ *Role Mode Permissions
+ *Edit Crud using fieldsinfo
+ *dump sql 
+
+

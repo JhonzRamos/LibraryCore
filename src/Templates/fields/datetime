@@ -1,0 +1,14 @@
+<div class="form-group">
+    {!! Form::label('$LABEL$', '$TITLE$', array('class'=>'control-label')) !!}
+
+          <div class="input-group date">
+
+                      {!! Form::text('$LABEL$', old('$LABEL$'), array('class'=>'form-control datetimepicker','disabled'=> isset($view) ? true : false)) !!}
+                       <div class="input-group-addon">
+                                          <i class="fa fa-calendar"></i>
+                                          </div>
+
+                </div>
+            $HELPER$
+
+</div>
