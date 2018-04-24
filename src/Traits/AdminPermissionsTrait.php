@@ -36,6 +36,7 @@ trait AdminPermissionsTrait
             'files',
             'roles',
             'projects',
+            'download',
             'actions'
         ];
         if (in_array($route[0], $official)) {

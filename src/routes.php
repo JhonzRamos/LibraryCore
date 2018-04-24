@@ -145,6 +145,11 @@ Route::group([
             'uses' => 'ProjectsController@massDelete'
         ]);
 
+        Route::get(config('quickadmin.route') . '/download', [
+            'as'   => 'download.zip',
+            'uses' => 'JSZipController@download',
+        ]);
+
 
     });
 });
@@ -155,6 +160,8 @@ Route::group([
     'middleware' => ['web']
 ], function () {
     // Point to App\Http\Controllers\UsersController as a resource
+
+
     Route::group([
         'middleware' => 'role'
     ], function () {

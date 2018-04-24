@@ -50,21 +50,50 @@
 
 
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-md-6">
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">Project</h3>
                 </div>
                 <div class="box-body">
-                    <div class="list-group">
-                        <a href="http://myigniter.kotaxdev.com/myigniter/menu/side-menu" class="list-group-item ">Side menu</a>
-                        <a href="http://myigniter.kotaxdev.com/myigniter/menu/top-menu" class="list-group-item ">Top menu</a>
-                        <a href="http://myigniter.kotaxdev.com/myigniter/menu/etwt" class="list-group-item  active ">etwt</a>
+                    <table class="table table-striped table-hover table-bordered" width="100%"  id="">
+                        <thead>
+                        <th>ID</th>
+                        <th>Project Name</th>
+                        <th>Version</th>
+                        <th>
+                            <div class="btn-group tools">
+                                <button action="form" type="button" onclick="location.href ='{{ route('menu.crud') }}'" class="btn btn-default btn-sm fa">+</button>
+                                <div class="btn-group">
+                                    <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
+                                            data-toggle="dropdown" aria-expanded="false"></button>
+                                    <ul class="dropdown-menu pull-right ColumnToggle" role="menu">
+                                        <li action="form" data-column="0" class="toggle-vis Checked">
+                                            <a href="javascript:void(0)"><i class="fa fa-check"></i>ID</a>
+                                        </li>
+                                        <li action="form" data-column="1" class="toggle-vis Checked">
+                                            <a href="javascript:void(0)"><i class="fa fa-check"></i>Project Name</a>
+                                        </li>
+                                        <li action="form" data-column="2" class="toggle-vis Checked">
+                                            <a href="javascript:void(0)"><i class="fa fa-check"></i>Version</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </th>
+                        </thead>
 
-                    </div>
-                    <div class="form-group">
-                        <a href="#" class="btn btn-primary btn-block btn-flat"><i class="fa fa-plus-circle"></i> Add Menu Type</a>
-                    </div>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td><a href="#" class="btn btn-primary  btn-flat">Active</a></td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
@@ -253,7 +282,6 @@
                                         <li action="form" data-column="3" class="toggle-vis Checked">
                                             <a href="javascript:void(0)"><i class="fa fa-check"></i>Photo</a>
                                         </li>
-
                                     </ul>
                                 </div>
                             </div>

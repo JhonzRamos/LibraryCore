@@ -367,7 +367,7 @@ class QuickadminMenuController extends Controller
         }
         // Create controller
         $controllerBuilder = new ControllerBuilder();
-        $controllerBuilder->buildCustom($request->name);
+        $controllerBuilder->buildCustomCRUD($request->name);
 
         // Create views
         $viewsBuilder = new ViewsBuilder();

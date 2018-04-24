@@ -74,6 +74,16 @@ class ControllerBuilder
             $this->publish($template);
     }
 
+    public function buildCustomCRUD($name)
+    {
+        $this->template = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'customController';
+        $this->name     = $name;
+        $this->names();
+        $template = (string)$this->loadTemplate();
+        $template = $this->buildParts($template);
+        $this->publish($template);
+    }
+
     /**
      *  Load controller template
      */
