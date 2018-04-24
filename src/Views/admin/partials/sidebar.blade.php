@@ -2,8 +2,23 @@
         <!-- Left side column. contains the sidebar -->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
-    <section class="sidebar">
-        <ul class="sidebar-menu">
+    <section class="sidebar" id="menuSidebar">
+
+        <!-- Sidebar user panel -->
+        @include('admin.partials.userpanel')
+
+
+        <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" class="form-control searchlist" id="searchSidebar" placeholder="Search..." autocomplete="off"/>
+                    <span class="input-group-btn">
+                        <button type='button' name='seach' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+        </form>
+         <ul class="sidebar-menu list" id="menuList">
+        </ul>
+        <ul class="sidebar-menu list" id="menuSub">
 
             @if(Auth::user()->role_id == config('quickadmin.defaultRole'))
                 <li class="treeview @if(Request::path() == config('quickadmin.route').'/menu') active  menu-open @endif ">
@@ -33,9 +48,55 @@
                  <li class="treeview @if(Request::path() == 'files') active  menu-open @endif  ">
                     <a href="{{ url(config('quickadmin.route').'/files') }}">
                         <i class="fa fa-files-o"></i>
-                        <span class="title">{{ trans('quickadmin::admin.partials-sidebar-files') }}</span>
+                        <span class="title">Generated Files</span>
                     </a>
                 </li>
+                 <li class="treeview @if(Request::path() == 'projects') active  menu-open @endif  ">
+                    <a href="{{ url(config('quickadmin.route').'/projects') }}">
+                        <i class="fa fa-files-o"></i>
+                        <span class="title">Projects</span>
+                    </a>
+                </li>
+                 <li class="treeview @if(Request::path() == 'forms') active  menu-open @endif  ">
+                    <a href="{{ url(config('quickadmin.route').'/forms') }}">
+                        <i class="fa fa-files-o"></i>
+                        <span class="title">Form Builder</span>
+                    </a>
+                </li>
+                 <li class="treeview @if(Request::path() == 'extensions') active  menu-open @endif  ">
+                    <a href="#">
+                        <i class="fa fa-files-o"></i>
+                        <span class="title">Extensions</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-cogs"></i>
+                                <span class="title">Settings</span>
+                                <span class="fa arrow"></span>
+                                <span class="pull-right-container">
+                                  <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+
+
+                                          <li class="treeview @if(Request::path() == 'extensions') active  menu-open @endif  ">
+                                                <a href="#">
+                                                    <i class="fa fa-files-o"></i>
+                                                    <span class="title">Extensions</span>
+                                                </a>
+                                            </li>
+
+                                          <li class="treeview @if(Request::path() == 'extensions') active  menu-open @endif  ">
+                                            <a href="#">
+                                                <i class="fa fa-files-o"></i>
+                                                <span class="title">Extensions</span>
+                                            </a>
+                                        </li>
+
+                            </ul>
+                        </li>
             @endif
             <li class="header">
                 Generated Menus
