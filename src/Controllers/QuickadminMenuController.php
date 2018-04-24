@@ -118,6 +118,7 @@ class QuickadminMenuController extends Controller
     public function insertCrud(Request $request)
     {
 
+//        return $request->permissions;
         $roles = Role::pluck('id')->all();
 
 

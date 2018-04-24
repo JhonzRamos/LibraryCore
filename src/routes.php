@@ -52,6 +52,7 @@ Route::group([
 ], function () {
     // Dashboard home page route
     Route::get(config('quickadmin.homeRoute'), config('quickadmin.homeAction','QuickadminController@index'));
+
     Route::group([
         'middleware' => 'role'
     ], function () {
@@ -128,6 +129,23 @@ Route::group([
             'as'   => 'menu.ajax',
             'uses' => 'QuickadminMenuController@table'
         ]);
+
+        Route::get(config('quickadmin.route') . '/projects', [
+            'as' => 'projects.index',
+            'uses' => 'ProjectsController@index'
+        ]);
+
+        Route::get(config('quickadmin.route') . '/projects', function(){
+            return view('qa::projects.index');
+        });
+
+        Route::resource(config('quickadmin.route') . '/projects',  'ProjectsController');
+        Route::get(config('quickadmin.route') . '/projects', [
+            'as'   => 'projects.massDelete',
+            'uses' => 'ProjectsController@massDelete'
+        ]);
+
+
     });
 });
 

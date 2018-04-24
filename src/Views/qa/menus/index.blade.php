@@ -50,7 +50,25 @@
 
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-sm-4">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Project</h3>
+                </div>
+                <div class="box-body">
+                    <div class="list-group">
+                        <a href="http://myigniter.kotaxdev.com/myigniter/menu/side-menu" class="list-group-item ">Side menu</a>
+                        <a href="http://myigniter.kotaxdev.com/myigniter/menu/top-menu" class="list-group-item ">Top menu</a>
+                        <a href="http://myigniter.kotaxdev.com/myigniter/menu/etwt" class="list-group-item  active ">etwt</a>
+
+                    </div>
+                    <div class="form-group">
+                        <a href="#" class="btn btn-primary btn-block btn-flat"><i class="fa fa-plus-circle"></i> Add Menu Type</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">Menus</h3>
@@ -202,7 +220,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">Menu Type</h3>

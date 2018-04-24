@@ -2,6 +2,20 @@
 
 @section('content')
 
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        {!! implode('', $errors->all('
+                        <li class="error">:message</li>
+                        ')) !!}
+                    </ul>
+                </div>
+            @endif
+        </div>
+    </div>
+
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">{{ trans('quickadmin::templates.templates-view_index-list') }}</h3>
@@ -28,23 +42,29 @@
                     </div>
                 </div>
             </div>
-            <table class="table table-striped table-hover table-responsive table-bordered" id="$TABLE$DataTable">
+            <table class="table table-striped table-hover table-responsive table-bordered" id="ProjectsDataTable">
                 <thead>
                     <tr>
                         <th>
                             {!! Form::checkbox('delete_all',1,false,['class' => 'mass']) !!}
                         </th>
-                        $HEADINGS$
+                        <th>Project Name</th>
+<th>Project Title</th>
+<th>Laravel Version</th>
+
                         <th>
                             <div class="btn-group tools">
                                 @if(Auth::user()->role->canCreate(explode('/',Request::path())[1]))
-                                <button action="form" type="button" onclick="location.href ='{{ route(config('quickadmin.route').'.$ROUTE$.create') }}'" class="btn btn-default btn-sm fa">+</button>
+                                <button action="form" type="button" onclick="location.href ='{{ route('projects.create') }}'" class="btn btn-default btn-sm fa">+</button>
                                 @endif
                                 <div class="btn-group">
                                     <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
                                             data-toggle="dropdown" aria-expanded="false"></button>
                                     <ul class="dropdown-menu pull-right ColumnToggle" role="menu">
-                                       $TOGGLE$
+                                       <li action="form" data-column="1" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Project Name</a></li>
+<li action="form" data-column="2" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Project Title</a></li>
+<li action="form" data-column="3" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Laravel Version</a></li>
+
                                     </ul>
                                 </div>
                             </div>
@@ -53,17 +73,20 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($$RESOURCE$ as $row)
+                    @foreach ($projects as $row)
                         <tr>
                             <td>
                                 {!! Form::checkbox('del-'.encrypt($row->id),1,false,['class' => 'single','data-id'=> encrypt($row->id)]) !!}
                             </td>
-                            $FIELDS$
+                            <td>{{ $row->name }}</td>
+<td>{{ $row->title }}</td>
+<td>{{ $row->version }}</td>
+
                             <td>
-   
+
                                 <div class="btn-group tools">
                                     @if(Auth::user()->role->canView(explode('/',Request::path())[1]))
-                                    <button type="button" onclick="location.href ='{{route(config('quickadmin.route').'.$ROUTE$.show', array(encrypt($row->id))) }}'" class="btn btn-default btn-sm fa fa-search"></button>
+                                    <button type="button" onclick="location.href ='{{route('projects.show', array(encrypt($row->id))) }}'" class="btn btn-default btn-sm fa fa-search"></button>
                                     @endif
                                     @if(Auth::user()->role->canEdit(explode('/',Request::path())[1])==true ||  Auth::user()->role->canDelete(explode('/',Request::path())[1])==true)
                                     <div class="btn-group">
@@ -71,10 +94,10 @@
                                                 data-toggle="dropdown"></button>
                                         <ul class="dropdown-menu pull-right" role="menu">
                                              @if(Auth::user()->role->canEdit(explode('/',Request::path())[1]))
-                                            <li action="form"><a href="{{route(config('quickadmin.route').'.$ROUTE$.edit', array(encrypt($row->id))) }}"><i class="fa fa-pencil-square-o"></i>Edit</a></li>
+                                            <li action="form"><a href="{{route('projects.edit', array(encrypt($row->id))) }}"><i class="fa fa-pencil-square-o"></i>Edit</a></li>
                                              @endif
                                             @if(Auth::user()->role->canDelete(explode('/',Request::path())[1]))
-                                            <li action="delete"><a href="#" data-toggle="modal" id="{{encrypt($row->id)}}" data-route="{{route(config('quickadmin.route').'.$ROUTE$.destroy', encrypt($row->id))}}" data-target="#mDelete">
+                                            <li action="delete"><a href="#" data-toggle="modal" id="{{encrypt($row->id)}}" data-route="{{route('projects.destroy', encrypt($row->id))}}" data-target="#mDelete">
                                                     <i class="fa fa-minus"></i>Delete</a></li>
                                              @endif
                                         </ul>
@@ -96,7 +119,7 @@
                  @endif
                 </div>
             </div>
-            {!! Form::open(['route' => config('quickadmin.route').'.$ROUTE$.massDelete', 'method' => 'post', 'id' => 'massDelete']) !!}
+            {!! Form::open(['route' => 'projects.massDelete', 'method' => 'post', 'id' => 'massDelete']) !!}
                 <input type="hidden" id="send" name="toDelete">
             {!! Form::close() !!}
         </div>
@@ -155,7 +178,7 @@
                     $('#massDelete').submit();
                 }
             });
-             var table = $('#$TABLE$DataTable').DataTable($COLUMN$);
+             var table = $('#ProjectsDataTable').DataTable({"columnDefs":[{"width":"30px","targets":0,"searchable":false,"orderable":false,"visible":true},{"targets":1,"searchable":true,"orderable":true,"visible":true},{"targets":2,"searchable":true,"orderable":true,"visible":true},{"targets":3,"searchable":true,"orderable":true,"visible":true},{"width":"200px","targets":4,"searchable":false,"orderable":false,"visible":true}]});
                 $('.toggle-vis').on('click', function (e) {
                     e.preventDefault();
 
