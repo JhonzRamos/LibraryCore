@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class $CLASS$ extends Seeder
+{
+
+    /**
+     * Auto generated seed file
+     *
+     * @return void
+     */
+    public function run()
+    {
+
+        $items = $DATA$;
+
+        foreach ($items as $item) {
+            \App\$CLASS$::create($item);
+        }
+    }
+
+}

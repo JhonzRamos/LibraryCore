@@ -83,7 +83,7 @@ class $CLASS$ extends Controller {
         	$REFERENCEMODEL$::create([ '$RESOURCE$_id' => $model->id, '$REFERENCENAME$_id' =>intval($request->$REFERENCENAME$_id[$i])]);
         }
 
-		return redirect()->route(config('quickadmin.route').'.$COLLECTION$.index');
+		return redirect()->route('admin'.'.$COLLECTION$.index');
 	}
 
 	/**
@@ -121,7 +121,7 @@ class $CLASS$ extends Controller {
 
 		$$RESOURCE$->update($request->all());
 
-		return redirect()->route(config('quickadmin.route').'.$COLLECTION$.index');
+		return redirect()->route('admin'.'.$COLLECTION$.index');
 	}
 
 	/**
@@ -133,7 +133,7 @@ class $CLASS$ extends Controller {
 	{
 		$MODEL$::destroy(decrypt($id));
 
-		return redirect()->route(config('quickadmin.route').'.$COLLECTION$.index');
+		return redirect()->route('admin'.'.$COLLECTION$.index');
 	}
 
     /**
@@ -155,7 +155,7 @@ class $CLASS$ extends Controller {
             $MODEL$::whereNotNull('id')->delete();
         }
 
-        return redirect()->route(config('quickadmin.route').'.$COLLECTION$.index');
+        return redirect()->route('admin'.'.$COLLECTION$.index');
     }
 
 }

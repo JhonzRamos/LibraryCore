@@ -7,6 +7,7 @@
             <table class="table table-striped table-hover table-responsive" id="ajaxtable">
                 <thead>
                 <th>Path</th>
+                <th>Name</th>
                 <th>Menu</th>
                 <th>Type</th>
                 <th>Time</th>
@@ -32,6 +33,7 @@
             },
             columns: [
                 {data: 'path', name: 'path'},
+                {data: 'filename', name: 'name'},
                 {data: 'menu_id', name: 'menu'},
                 {data: 'type', name: 'type'},
                 {data: 'created_at', name: 'created_at'}

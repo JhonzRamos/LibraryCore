@@ -21,6 +21,8 @@ use Laraveldaily\Quickadmin\Cache\QuickCache;
 use Laraveldaily\Quickadmin\Fields\FieldsDescriber;
 use Laraveldaily\Quickadmin\Models\Files;
 use Laraveldaily\Quickadmin\Models\Menu;
+use Laraveldaily\Quickadmin\Models\ProjectMenus;
+use Laraveldaily\Quickadmin\Models\Projects;
 use Laraveldaily\Quickadmin\Models\RolePermissions;
 use Yajra\Datatables\Datatables;
 use Illuminate\Filesystem\Filesystem;
@@ -34,12 +36,34 @@ class QuickadminMenuController extends Controller
      */
     public function index()
     {
+//        $menusList = Menu::with(['children'])
+//            ->where('menu_type', '!=', 0)
+//            ->where('parent_id', null)
+//            ->orderBy('position')->get();
+
+        $active = Projects::where('active', 1)->first();
+        $menus = ProjectMenus::where('project_id',$active->id)->pluck('menu_id');
+
         $menusList = Menu::with(['children'])
             ->where('menu_type', '!=', 0)
             ->where('parent_id', null)
-            ->orderBy('position')->get();
+            ->orderBy('position')->whereIn('id',$menus)->get();
 
-        return view('qa::menus.index', compact('menusList'));
+
+
+
+        //menu ids
+
+
+
+
+
+
+        $projects = Projects::all();
+
+
+
+        return view('qa::menus.index', compact('menusList', 'projects'));
     }
 
     public function table()
@@ -149,9 +173,18 @@ class QuickadminMenuController extends Controller
         ]);
 
 
+
+
         $menu->roles()->sync($request->input('roles', []));
 
         $this->menuId = $menu->id;
+
+        $active = Projects::where('active', 1)->first();
+
+        ProjectMenus::create([
+            'menu_id'         => $menu->id,
+            'project_id'      => $active->id,
+        ]);
 
         foreach ($request->permissions as $key => $value) {
             foreach ($value as $key1 => $value1) {
@@ -174,8 +207,10 @@ class QuickadminMenuController extends Controller
         $cached['date']          = 0;
         $cached['datetime']      = 0;
         $cached['enum']          = 0;
-        $cached['reference_table']          = "";
-        $cached['menu_id']          = $menu->id;
+        $cached['reference_table']          = ""; //
+        $cached['menu_id']          = $menu->id; //
+        $cached['title']          = $request->title; //
+        $cached['icon']          = $request->icon != '' ? $request->icon : 'fa-database'; //
         $fields                  = [];
 
         foreach ($request->f_type as $index => $field) {
@@ -324,6 +359,9 @@ class QuickadminMenuController extends Controller
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
+
+
+
         $menu = Menu::create([
             'position'  => 0,
             'menu_type' => 2,
@@ -333,6 +371,16 @@ class QuickadminMenuController extends Controller
             'parent_id' => null,
         ]);
         $menu->roles()->sync($request->input('roles', []));
+
+        $this->menuId = $menu->id;
+
+        $active = Projects::where('active', 1)->first();
+
+        ProjectMenus::create([
+            'menu_id'         => $menu->id,
+            'project_id'      => $active->id,
+        ]);
+
 
         return redirect()->route('menu');
     }

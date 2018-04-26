@@ -63,7 +63,7 @@
                         <th>Version</th>
                         <th>
                             <div class="btn-group tools">
-                                <button action="form" type="button" onclick="location.href ='{{ route('menu.crud') }}'" class="btn btn-default btn-sm fa">+</button>
+                                <button action="form" type="button" onclick="location.href ='{{route('projects.create')}}'" class="btn btn-default btn-sm fa">+</button>
                                 <div class="btn-group">
                                     <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
                                             data-toggle="dropdown" aria-expanded="false"></button>
@@ -84,13 +84,18 @@
                         </thead>
 
                         <tbody>
+                        @foreach($projects as $row)
                         <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td><a href="#" class="btn btn-primary  btn-flat">Active</a></td>
-
+                            <td>{{$row->id}}</td>
+                            <td>{{$row->title}}</td>
+                            <td>{{$row->version}}</td>
+                            <td>
+                                <a href="{{route('projects.active', $row->id)}}" class="btn {{($row->active == 1)? 'btn-primary':'btn-default'}} btn-xs btn-flat">Active</a>
+                                <a href="{{route('projects.edit', $row->id)}}" class="btn btn-info btn-xs btn-flat">Edit</a>
+                                <a href="{{route('download.zip', $row->id)}}" class="btn btn-success btn-xs btn-flat">Download</a>
+                            </td>
                         </tr>
+                        @endforeach
                         </tbody>
                     </table>
 

@@ -31,6 +31,8 @@ class ViewsBuilder
     ];
     // Menu Id
     private $menuId;
+    private $title ;
+    private $icon ;
 
 
     /**
@@ -50,6 +52,8 @@ class ViewsBuilder
         $this->files    = $cached['files'];
         $this->relationshipName     = $cached['reference_table']; //many
         $this->menuId     = $cached['menu_id'];
+        $this->title     = $cached['title'];
+        $this->icon     = $cached['icon'];
         $this->names();
         $template = (array)$this->loadTemplate();
         $template = $this->buildParts($template);
@@ -98,6 +102,8 @@ class ViewsBuilder
 
         // Index template
         $template[0] = str_replace([
+            '$ICON$',
+            '$NAME$',
             '$ROUTE$',
             '$RESOURCE$',
             '$HEADINGS$',
@@ -106,6 +112,8 @@ class ViewsBuilder
             '$TABLE$',
             '$COLUMN$'
         ], [
+            $this->icon,
+            $this->title,
             $this->route,
             $this->resource,
             $this->headings,
@@ -117,12 +125,14 @@ class ViewsBuilder
 
         // Edit template
         $template[1] = str_replace([
+            '$NAME$',
             '$ROUTE$',
             '$RESOURCE$',
             '$FORMFIELDS$',
             '$MODEL$',
             '$FILES$'
         ], [
+            $this->title,
             $this->route,
             $this->resource,
             $this->formFieldsEdit,
@@ -132,11 +142,13 @@ class ViewsBuilder
 
         // Create template
         $template[2] = str_replace([
+            '$NAME$',
             '$ROUTE$',
             '$RESOURCE$',
             '$FORMFIELDS$',
             '$FILES$'
         ], [
+            $this->title,
             $this->route,
             $this->resource,
             $this->formFieldsCreate,
@@ -200,7 +212,7 @@ class ViewsBuilder
                     $used[$field->relationship_field] = $field->relationship_field;
                 }
                 elseif ($field->type == 'photo') {
-                    $columns .= '<td>@if($row->' . $field->title . ' != \'\')<img src="{{ asset(\'uploads/thumb\') . \'/\'.  $row->' . $field->title . " }}\">@endif</td>\r\n";
+                    $columns .= '<td>@if($row->' . $field->title . ' != \'\')<a href="{{ asset(\'uploads/thumb\') . \'/\'.  $row->' . $field->title . ' }}\" class="image-thumbnail"><img src="{{ asset(\'uploads/thumb\') . \'/\'.  $row->' . $field->title . " }}\" height=\"50px\"></a>@endif</td>\r\n";
                     $used[$field->title] = $field->title;
                 } elseif ($field->type == 'file') {
                 $columns .= '<td>{{ HTML::link( \'/uploads/\'.$row->'.$field->title.', $row->'.$field->title." ) }}</td>\r\n"; ///file render
@@ -211,7 +223,7 @@ class ViewsBuilder
                     $used[$field->title] = $field->title;
                 }
                 elseif ($field->type == 'toggle') {
-                    $columns .= '<td>@if($row->'.$field->title.'== 1)<td><span class="label label-success">True</span></td>@else<td><span class="label label-danger">False</span></td>@endif</td>'; ///file render
+                    $columns .= '@if($row->'.$field->title.'== 1)<td><span class="label label-success">True</span></td>@else<td><span class="label label-danger">False</span></td>@endif'; ///file render
                     $used[$field->title] = $field->title;
                 }
                 else {
@@ -398,6 +410,7 @@ class ViewsBuilder
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
         $file->menu_id = $this->menuId;
+        $file->filename = $this->path . DIRECTORY_SEPARATOR . 'index.blade.php';
         $file->save();
 
         file_put_contents(base_path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . $this->path . DIRECTORY_SEPARATOR . 'edit.blade.php'),
@@ -409,6 +422,7 @@ class ViewsBuilder
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
         $file->menu_id = $this->menuId;
+        $file->filename = $this->path . DIRECTORY_SEPARATOR . 'edit.blade.php';
         $file->save();
 
         file_put_contents(base_path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . $this->path . DIRECTORY_SEPARATOR . 'create.blade.php'),
@@ -420,6 +434,7 @@ class ViewsBuilder
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
         $file->menu_id = $this->menuId;
+        $file->filename = $this->path . DIRECTORY_SEPARATOR . 'create.blade.php';
         $file->save();
 
     }
@@ -439,6 +454,7 @@ class ViewsBuilder
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
         $file->menu_id = $this->menuId;
+        $file->filename = $this->path . DIRECTORY_SEPARATOR . 'index.blade.php';
         $file->save();
     }
 

@@ -6,9 +6,17 @@
 
 use Illuminate\Support\Facades\View;
 use Laraveldaily\Quickadmin\Models\Menu;
+use Laraveldaily\Quickadmin\Models\ProjectMenus;
+use Laraveldaily\Quickadmin\Models\Projects;
 
 if (Schema::hasTable('menus')) {
-    $menus = Menu::with('children')->where('menu_type', '!=', 0)->orderBy('position')->get();
+
+    $active = Projects::where('active', 1)->first();
+    $menus1 = ProjectMenus::where('project_id',$active->id)->pluck('menu_id');
+
+    $menus = Menu::with('children')->where('menu_type', '!=', 0)->orderBy('position')->whereIn('id',$menus1)->get();
+
+    
     View::share('menus', $menus);
     if (! empty($menus)) {
         Route::group([
@@ -130,25 +138,35 @@ Route::group([
             'uses' => 'QuickadminMenuController@table'
         ]);
 
-        Route::get(config('quickadmin.route') . '/projects', [
-            'as' => 'projects.index',
-            'uses' => 'ProjectsController@index'
+
+
+        Route::resource(config('quickadmin.route') . '/projects', 'ProjectsController');
+
+        Route::get(config('quickadmin.route') . '/projects/active/{id}', [
+            'as'   => 'projects.active',
+            'uses' => 'ProjectsController@active'
         ]);
 
-        Route::get(config('quickadmin.route') . '/projects', function(){
-            return view('qa::projects.index');
-        });
 
-        Route::resource(config('quickadmin.route') . '/projects',  'ProjectsController');
+
         Route::get(config('quickadmin.route') . '/projects', [
             'as'   => 'projects.massDelete',
             'uses' => 'ProjectsController@massDelete'
         ]);
 
-        Route::get(config('quickadmin.route') . '/download', [
+        Route::get(config('quickadmin.route') . '/download/{id}', [
             'as'   => 'download.zip',
             'uses' => 'JSZipController@download',
         ]);
+//
+//        Route::get(config('quickadmin.route') . '/forms', [
+//            'as'   => 'forms.builder',
+//            'uses' => 'FormsController@index'
+//        ]);
+
+        Route::get(config('quickadmin.route') . '/forms', function(){
+            return view('qa::forms.index');
+        });
 
 
     });

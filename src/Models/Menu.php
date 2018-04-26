@@ -42,6 +42,11 @@ class Menu extends Model
         return $this->belongsToMany(Role::class);
     }
 
+
+    public function project()
+    {
+        return $this->belongsToMany(Projects::class);
+    }
     public function availableForRole($role)
     {
         if ($role instanceof Role) {

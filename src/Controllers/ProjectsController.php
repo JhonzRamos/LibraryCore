@@ -4,7 +4,7 @@ namespace Laraveldaily\Quickadmin\Controllers;
 
 
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
 use Laraveldaily\Quickadmin\Models\Projects;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Schema;
@@ -23,11 +23,13 @@ class ProjectsController extends Controller {
      *
      * @return \Illuminate\View\View
 	 */
-	public function index(Request $request)
+	public function index()
     {
+
+		return 'test';
         $projects = Projects::all();
 
-		return view('qa::projects.index', compact('projects'));
+		return view('qa.projects.index', compact('projects'));
 	}
 
 	/**
@@ -49,7 +51,7 @@ class ProjectsController extends Controller {
 	 */
 	public function show($id)
 	{
-		$projects = Projects::find(decrypt($id));
+		$projects = Projects::find($id);
 		
 		
 		$view = "view";
@@ -73,7 +75,7 @@ class ProjectsController extends Controller {
 
 		Projects::create($request->all());
 
-		return redirect()->route('projects.index');
+		return redirect()->route('menu');
 	}
 
 	/**
@@ -85,7 +87,7 @@ class ProjectsController extends Controller {
 	public function edit($id)
 	{
 
-		$projects = Projects::find(decrypt($id));
+		$projects = Projects::find($id);
 	    
 	    
 		return view('qa::projects.edit', compact('projects'));
@@ -107,13 +109,13 @@ class ProjectsController extends Controller {
 			return redirect()->back()->withInput()->withErrors($validation);
 		}
 
-		$projects = Projects::findOrFail(decrypt($id));
+		$projects = Projects::findOrFail($id);
 
         
 
 		$projects->update($request->all());
 
-		return redirect()->route('projects.index');
+		return redirect()->route('menu');
 	}
 
 	/**
@@ -149,5 +151,25 @@ class ProjectsController extends Controller {
 
         return redirect()->back();
     }
+
+	public function active($id)
+	{
+		$projects = Projects::all();
+
+		foreach($projects as $row){
+			$row->active = 0;
+			$row->save();
+		}
+
+
+		$projects = Projects::findOrFail($id);
+		$projects->active = 1;
+		$projects->save();
+
+
+
+		return redirect()->route('menu');
+	}
+
 
 }

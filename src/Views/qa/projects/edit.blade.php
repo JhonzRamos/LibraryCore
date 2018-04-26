@@ -15,7 +15,7 @@
         <h3 class="box-title"><i class="fa fa-plus-circle fa-fw"></i> {{ trans('quickadmin::templates.templates-view_edit-edit') }}</h3>
         </div>
         <div class="box-body">
-            {!! Form::model($projects, array('id' => 'form-with-validation', 'method' => 'PATCH', 'route' => array(config('quickadmin.route').'.projects.update', encrypt($projects->id)))) !!}
+            {!! Form::model($projects, array('id' => 'form-with-validation', 'method' => 'PATCH', 'route' => array('projects.update', $projects->id))) !!}
 
             <div class="form-group">
     {!! Form::label('name', 'Project Name*', array('class'=>'control-label')) !!}
@@ -35,7 +35,7 @@
             <div class="row">
                 <div class="col-md-12">
                      @if(!isset($view)){!! Form::submit(trans('quickadmin::templates.templates-view_edit-update'), array('class' => 'btn btn-primary')) !!}@endif
-                          {!! link_to_route(config('quickadmin.route').'.projects.index', trans('quickadmin::templates.templates-view_edit-cancel'), null, array('class' => 'btn btn-default')) !!}
+                          {!! link_to_route('menu', trans('quickadmin::templates.templates-view_edit-cancel'), null, array('class' => 'btn btn-default')) !!}
                 </div>
             </div>
         </div>

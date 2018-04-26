@@ -62,5 +62,41 @@
  +dump sql
  *add foreign key to role_permission add unsigned
  +Permissions for delete
+04/23/2018
+ + View Datatable for Projects
+ + Print and export button
+ *print and flexigrid
+ * view trash Revive
+04/24/2018
+ +Download as Zip
+ *copy the generated files the
+ *add key value for radio
+ +algorithm for editing
+  >save the fieldinfo
+  >open the edit pass the id
+  >load the fieldinfo for that ID
+  >make changes
+  >save the edit by delete all the files for that menu then create
+ +algorithm for downloading
+  >create temp folder/
+  >copy the base file for version 5
+  >get the current project ID
+  >name the folder by title
+  >get all the menus for that project + the bloatwares
+  >copy the generated files
+  >create the routes files
+  >zip the folder
+  >unlink zip
+  >unlink the folder
+ +toggle active project view menu
+ +sidebar toggle
+ *positioning problem
+ +assign the menu to project
+ *issue with duplicate names
+ +direct directory Access
+ +link for photo
+ +parent menu add to project_menu
+ +routes file template
+ *sidebar with permissions
 
 

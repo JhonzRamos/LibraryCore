@@ -2,34 +2,48 @@
 
 @section('content')
 
-        @if ($errors->any())
-        	<div class="alert alert-danger">
-        	    <ul>
-                    {!! implode('', $errors->all('<li class="error">:message</li>')) !!}
-                </ul>
-        	</div>
-        @endif
+     <h3 class="page-title">$NAME$</h3>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            @if (Session::has('message'))
+                <div class="alert alert-info">
+                    <p>{{ Session::get('message') }}</p>
+                </div>
+            @endif
+            @if ($errors->count() > 0)
+                <div class="alert alert-danger">
+                    <ul class="list-unstyled">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
 
     <div class="box ">
         <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-plus-circle fa-fw"></i> {{ trans('quickadmin::templates.templates-view_edit-edit') }}</h3>
+        <h3 class="box-title"><i class="fa fa-pencil fa-fw"></i>$NAME$ Edit</h3>
         </div>
         <div class="box-body">
-            {!! Form::model($$MODEL$, array($FILES$'id' => 'form-with-validation', 'method' => 'PATCH', 'route' => array(config('quickadmin.route').'.$ROUTE$.update', encrypt($$RESOURCE$->id)))) !!}
+            {!! Form::model($$MODEL$, array($FILES$'id' => 'form-with-validation', 'method' => 'PATCH', 'route' => array('admin'.'.$ROUTE$.update', encrypt($$RESOURCE$->id)))) !!}
 
             $FORMFIELDS$
         </div>
         <div class="box-footer">
             <div class="row">
                 <div class="col-md-12">
-                     @if(!isset($view)){!! Form::submit(trans('quickadmin::templates.templates-view_edit-update'), array('class' => 'btn btn-primary')) !!}@endif
-                          {!! link_to_route(config('quickadmin.route').'.$ROUTE$.index', trans('quickadmin::templates.templates-view_edit-cancel'), null, array('class' => 'btn btn-default')) !!}
+                     @if(!isset($view)){!! Form::submit('Update', array('class' => 'btn btn-primary')) !!}@endif
+                          {!! link_to_route('admin'.'.$ROUTE$.index', 'Cancel', null, array('class' => 'btn btn-default')) !!}
                 </div>
             </div>
         </div>
         {!! Form::close() !!}
     </div>
-
+    </div>
+            </div>
 @endsection
 
 @section('javascript')

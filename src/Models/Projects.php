@@ -34,7 +34,13 @@ class Projects extends Model {
 
         Projects::observe(new UserActionsObserver);
     }
-    
+
+    public function menus()
+    {
+        return $this->hasMany('Laraveldaily\Quickadmin\Models\ProjectMenus', 'menu_id', 'id');
+    }
+
+
     
     
     

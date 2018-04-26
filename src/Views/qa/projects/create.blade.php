@@ -14,7 +14,7 @@
         <h3 class="box-title"><i class="fa fa-plus-circle fa-fw"></i> {{ trans('quickadmin::templates.templates-view_create-add_new') }}</h3>
         </div>
         <div class="box-body">
-         {!! Form::open(array('route' => config('quickadmin.route').'.projects.store', 'id' => 'form-with-validation')) !!}
+         {!! Form::open(array('route' => 'projects.store', 'id' => 'form-with-validation')) !!}
             <div class="form-group">
     {!! Form::label('name', 'Project Name*', array('class'=>'control-label')) !!}
         {!! Form::text('name', old('name'), array('class'=>'form-control','disabled'=> isset($view) ? true : false))  !!}
@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-md-12">
                   {!! Form::submit( trans('quickadmin::templates.templates-view_create-create') , array('class' => 'btn btn-primary')) !!}
-                   {!! link_to_route(config('quickadmin.route').'.projects.index', trans('quickadmin::templates.templates-view_edit-cancel'), null, array('class' => 'btn btn-default')) !!}
+                   {!! link_to_route('menu', trans('quickadmin::templates.templates-view_edit-cancel'), null, array('class' => 'btn btn-default')) !!}
                 </div>
             </div>
         </div>
