@@ -29,11 +29,6 @@ class JSZipController extends Controller {
 
 	public function download($id){
 
-		$seeder = new SeederBuilder();
-
-		return $seeder->build('role_permissions');
-
-
 		$rootPath = 'C:\xampp\htdocs\adminCMS3\vendor\laraveldaily\quickadmin\src\Laravel\5';
 
 		//menu ids
@@ -78,16 +73,24 @@ class JSZipController extends Controller {
 			}
 		}
 
-
+		$tablesNames = [];
 		foreach($menus as $key){
 
 			$files = Files::where('menu_id', $key)->get();
 			foreach ($files as $row) {
 
 				if ($row->type == 'Model') {
+					$content = file_get_contents($row->path);
+					$start = "\$table    = '";
+					$end = "';";
+					$tablesNames[] = $this->getBetween($content, $start, $end);
+
+
 					$destination = public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR  ; //model
 					copy($row->path, $destination.$row->filename);
 				}elseif($row->type == 'Migration'){
+
+
 					$destination =  public_path('temp').DIRECTORY_SEPARATOR .'database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR ; //migrations
 					copy($row->path, $destination.$row->filename);
 				}elseif($row->type == 'Controller'){
@@ -116,10 +119,12 @@ class JSZipController extends Controller {
 //		//create routes file
 //		return 'check the temp';
 
-		//copy
 
-
-		//copy the desired files
+		//Generate Seeds
+		foreach ($tablesNames as $row) {
+			$seeder = new SeederBuilder();
+			$seeder->build($row);
+		}
 
 
 		// Get real path for our folder__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Laravel' . DIRECTORY_SEPARATOR . '5'. DIRECTORY_SEPARATOR
@@ -183,5 +188,15 @@ class JSZipController extends Controller {
 
 
 	}
+
+	private function getBetween($content,$start,$end){
+		$r = explode($start, $content);
+		if (isset($r[1])){
+			$r = explode($end, $r[1]);
+			return $r[0];
+		}
+		return '';
+	}
+
 
 }

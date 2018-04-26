@@ -13,6 +13,7 @@ class SeederBuilder
 {
 
     private $template;
+    private $fileName;
     /**
      * Name of the database upon which the seed will be executed.
      *
@@ -64,11 +65,12 @@ class SeederBuilder
         }
 
         // Get the data
-        $this->data = $this->getData($table, 0, null, null, 'ASC');
+        $this->data = $this->tokenizer($this->getData($table, 0, null, null, 'ASC'));
 
         // Generate class name
         $this->className = $this->generateClassName($table);
 
+        $this->names();
 
         $this->template = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'seed';
 
@@ -78,11 +80,20 @@ class SeederBuilder
 
         $template = $this->buildParts($template);
 
-        return $template;
+
 
         $this->publish($template);
-    }
 
+    }
+    /**
+     *  Generate file and class names for the migration
+     */
+    private function names()
+    {
+        $fileName       = $this->className;
+        $fileName       = $fileName. '.php';
+        $this->fileName = $fileName;
+    }
     /**
      *  Load seeder template
      */
@@ -114,27 +125,32 @@ class SeederBuilder
     }
 
 
+    private function tokenizer($template)
+    {
+        $template = str_replace([
+            '":',
+            '{',
+            '}',
+
+        ], [
+            '"=>',
+            '[',
+            ']',
+
+        ], $template);
+
+        return $template;
+    }
+
+
     /**
      *  Publish file into it's place
      */
     private function publish($template)
     {
-        if (! file_exists(app_path('Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . 'Admin'))) {
-            mkdir(app_path('Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . 'Admin'));
-            chmod(app_path('Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . 'Admin'), 0777);
-        }
-        file_put_contents(app_path('Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . 'Admin' . DIRECTORY_SEPARATOR . $this->fileName),
-            $template);
 
-        $file = new Files();
-        $file->path = app_path('Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . 'Admin' . DIRECTORY_SEPARATOR . $this->fileName);
-        $file->type = "Controller";
-        $file->created_at = Carbon::now();
-        $file->updated_at = Carbon::now();
-        $file->menu_id = $this->menuId;
-        $file->filename = $this->fileName;
+        file_put_contents( public_path('temp').DIRECTORY_SEPARATOR .'database'.DIRECTORY_SEPARATOR.'seeds' .DIRECTORY_SEPARATOR . $this->fileName, $template);
 
-        $file->save();
     }
 
     /**

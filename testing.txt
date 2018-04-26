@@ -98,5 +98,11 @@
  +parent menu add to project_menu
  +routes file template
  *sidebar with permissions
-
+ +inverse seeding
+ +routes name
+ + removed trans in view and model
+ *update DataTableSeed.php
+ *route file
+ *sidebar fix
+ *dependencies auth|login|layouts|master|views|model|controllers|
 
