@@ -4,6 +4,7 @@ namespace Laraveldaily\Quickadmin\Controllers;
 
 use App\Http\Controllers\Controller;
 
+use Laraveldaily\Quickadmin\Builders\RoutesBuilder;
 use Laraveldaily\Quickadmin\Builders\SeederBuilder;
 use Laraveldaily\Quickadmin\Models\Files;
 use Laraveldaily\Quickadmin\Models\Menu;
@@ -28,6 +29,12 @@ class JSZipController extends Controller {
 	}
 
 	public function download($id){
+
+		$routes = new RoutesBuilder();
+		$routes->build();
+
+		return 'Created routes file';
+
 
 		$rootPath = 'C:\xampp\htdocs\adminCMS3\vendor\laraveldaily\quickadmin\src\Laravel\5';
 
@@ -73,7 +80,8 @@ class JSZipController extends Controller {
 			}
 		}
 
-		$tablesNames = [];
+		$tables = [];
+
 		foreach($menus as $key){
 
 			$files = Files::where('menu_id', $key)->get();
@@ -83,8 +91,16 @@ class JSZipController extends Controller {
 					$content = file_get_contents($row->path);
 					$start = "\$table    = '";
 					$end = "';";
-					$tablesNames[] = $this->getBetween($content, $start, $end);
 
+
+					$start1 = 'class ';
+					$end1 = ' extends';
+
+
+					$tables[] = array(
+						'tableName' => $this->getBetween($content, $start, $end),
+						'modelName' => $this->getBetween($content, $start1, $end1)
+					);
 
 					$destination = public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR  ; //model
 					copy($row->path, $destination.$row->filename);
@@ -121,7 +137,9 @@ class JSZipController extends Controller {
 
 
 		//Generate Seeds
-		foreach ($tablesNames as $row) {
+
+
+		foreach ($tables as $row) {
 			$seeder = new SeederBuilder();
 			$seeder->build($row);
 		}

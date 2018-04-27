@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class $CLASS$ extends Seeder
+class $CLASS$Seed extends Seeder
 {
 
     /**

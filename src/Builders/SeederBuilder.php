@@ -60,15 +60,15 @@ class SeederBuilder
         $this->databaseName = $database;
 
         // Check if table exists
-        if (!$this->hasTable($table)) {
-            throw new TableNotFoundException("Table $table was not found.");
+        if (!$this->hasTable($table["tableName"])) {
+            throw new TableNotFoundException("Table ".$table["tableName"]." was not found.");
         }
 
         // Get the data
-        $this->data = $this->tokenizer($this->getData($table, 0, null, null, 'ASC'));
+        $this->data = $this->tokenizer($this->getData($table["tableName"], 0, null, null, 'ASC'));
 
         // Generate class name
-        $this->className = $this->generateClassName($table);
+        $this->className = $table["modelName"];
 
         $this->names();
 
@@ -91,7 +91,7 @@ class SeederBuilder
     private function names()
     {
         $fileName       = $this->className;
-        $fileName       = $fileName. '.php';
+        $fileName       = $fileName.'Seed'. '.php';
         $this->fileName = $fileName;
     }
     /**
@@ -202,7 +202,7 @@ class SeederBuilder
         foreach ($tableName as $tableNameExploded) {
             $tableString .= ucfirst($tableNameExploded);
         }
-        return ucfirst($tableString) . 'Seed';
+        return ucfirst($tableString);
     }
 
 
