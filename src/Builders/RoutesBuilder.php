@@ -159,8 +159,10 @@ class RoutesBuilder
     private function publish($template)
     {
 
-        file_put_contents(public_path('routes.php'),
-            $template);
+//        file_put_contents(public_path('web.php'),
+//            $template);
+
+        file_put_contents( public_path('temp').DIRECTORY_SEPARATOR .'routes'.DIRECTORY_SEPARATOR. 'web.php', $template);
 
     }
 

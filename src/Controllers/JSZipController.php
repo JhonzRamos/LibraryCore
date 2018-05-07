@@ -4,6 +4,9 @@ namespace Laraveldaily\Quickadmin\Controllers;
 
 use App\Http\Controllers\Controller;
 
+use Laraveldaily\Quickadmin\Builders\DataSeederBuilder;
+use Laraveldaily\Quickadmin\Builders\GateBuilder;
+use Laraveldaily\Quickadmin\Builders\ProviderBuilder;
 use Laraveldaily\Quickadmin\Builders\RoutesBuilder;
 use Laraveldaily\Quickadmin\Builders\SeederBuilder;
 use Laraveldaily\Quickadmin\Models\Files;
@@ -30,10 +33,15 @@ class JSZipController extends Controller {
 
 	public function download($id){
 
-		$routes = new RoutesBuilder();
-		$routes->build();
-
-		return 'Created routes file';
+//		if(in_array(2, [1, 2])){
+//			return 'In array';
+//		}else{
+//			return 'Not In array';
+//		}
+//
+		$gate = new ProviderBuilder();
+		$gate->build();
+		return 'success';
 
 
 		$rootPath = 'C:\xampp\htdocs\adminCMS3\vendor\laraveldaily\quickadmin\src\Laravel\5';
@@ -133,16 +141,14 @@ class JSZipController extends Controller {
 		}
 //
 //		//create routes file
+		$routes = new RoutesBuilder();
+		$routes->build();
 //		return 'check the temp';
 
 
 		//Generate Seeds
-
-
-		foreach ($tables as $row) {
-			$seeder = new SeederBuilder();
-			$seeder->build($row);
-		}
+		$seeder = new DataSeederBuilder();
+		$seeder->build($tables);
 
 
 		// Get real path for our folder__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Laravel' . DIRECTORY_SEPARATOR . '5'. DIRECTORY_SEPARATOR
