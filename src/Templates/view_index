@@ -56,9 +56,9 @@
                         $HEADINGS$
                         <th>
                             <div class="btn-group tools">
-                                @if(Auth::user()->role->canCreate(explode('/',Request::path())[1]))
+                                @can('$RESOURCE$_create')
                                 <button action="form" type="button" onclick="location.href ='{{ route('admin'.'.$ROUTE$.create') }}'" class="btn btn-default btn-sm fa">+</button>
-                                @endif
+                                @endcan
                                 <div class="btn-group">
                                     <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
                                             data-toggle="dropdown" aria-expanded="false"></button>
@@ -81,21 +81,21 @@
                             <td>
    
                                 <div class="btn-group tools">
-                                    @if(Auth::user()->role->canView(explode('/',Request::path())[1]))
+                                    @can('$RESOURCE$_view')
                                     <button type="button" onclick="location.href ='{{route('admin'.'.$ROUTE$.show', array(encrypt($row->id))) }}'" class="btn btn-default btn-sm fa fa-search"></button>
-                                    @endif
-                                    @if(Auth::user()->role->canEdit(explode('/',Request::path())[1])==true ||  Auth::user()->role->canDelete(explode('/',Request::path())[1])==true)
+                                    @endcan
+                                    @if(Gate::allows('$RESOURCE$_edit') || Gate::allows('$RESOURCE$_delete'))
                                     <div class="btn-group">
                                         <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
                                                 data-toggle="dropdown"></button>
                                         <ul class="dropdown-menu pull-right" role="menu">
-                                             @if(Auth::user()->role->canEdit(explode('/',Request::path())[1]))
+                                            @can('$RESOURCE$_edit')
                                             <li action="form"><a href="{{route('admin'.'.$ROUTE$.edit', array(encrypt($row->id))) }}"><i class="fa fa-pencil-square-o"></i>Edit</a></li>
-                                             @endif
-                                            @if(Auth::user()->role->canDelete(explode('/',Request::path())[1]))
+                                            @endcan
+                                            @can('$RESOURCE$_delete')
                                             <li action="delete"><a href="#" data-toggle="modal" id="{{encrypt($row->id)}}" data-route="{{route('admin'.'.$ROUTE$.destroy', encrypt($row->id))}}" data-target="#mDelete">
                                                     <i class="fa fa-minus"></i>Delete</a></li>
-                                             @endif
+                                            @endcan
                                         </ul>
                                     </div>
                                    @endif

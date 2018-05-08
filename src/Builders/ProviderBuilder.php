@@ -16,6 +16,8 @@ class ProviderBuilder
     private $table;
     private $template;
     private $fileName;
+    private $menu_name;
+    private $roles ;
     /**
      * Name of the database upon which the seed will be executed.
      *
@@ -53,13 +55,15 @@ class ProviderBuilder
     /**
      * Build our seeder file
      */
-    public function build()
+    public function build($name, $roles)
     {
 //        return $this->compactBuilder();
+        $this->roles = (array)$roles;
 
+        $this->menu_name = $name;
         $this->template = app_path('Providers' . DIRECTORY_SEPARATOR  . 'AuthServiceProvider.php');
         $template = (string)$this->loadTemplate();
-        $template = $this->buildParts($template);
+        $template = $this->buildParts($template, $roles);
         $this->publish($template);
 
 //
@@ -118,13 +122,13 @@ class ProviderBuilder
      *
      * @return mixed
      */
-    private function buildParts($template)
+    private function buildParts($template, $roles)
     {
         $template = str_replace([
             '//APPEND//',
 
         ], [
-            $this->tokenizer($this->table)
+            $this->tokenizer($roles)
 
         ], $template);
 
@@ -132,18 +136,14 @@ class ProviderBuilder
     }
 
 
-    private function tokenizer()
+    private function tokenizer($roles)
     {
-
-        $template = 'Gate::define(\'permission_create\', function ($path) { '."\r\n";
+        $name = $this->menu_name;
+        $template = 'Gate::define(\''.$name.'\', function ($user) { '."\r\n";
         $template .= '            ';
-        $template .= '$menu_id = Menu::where(\'name\', $path)->pluck(\'id\')->first(); '."\r\n";
-        $template .= '            ';
-        $template .= '$permissions = Auth::user()->role->permissions->where(\'menu_id\',$menu_id)->where(\'permission_id\',2)->first(); '."\r\n";
-        $template .= '            ';
-        $template .= ' return $permissions;'."\r\n";
+        $template .= ' return in_array($user->role_id, ['.implode(",",(array)$this->roles).']);'."\r\n";
+        $template .= '       ';
         $template .= ' });'."\r\n";
-        $template .= "\r\n";
         $template .= '        ';
         $template .= "//APPEND//";
         return $template;

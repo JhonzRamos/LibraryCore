@@ -21,4 +21,9 @@ class RolePermissions extends Model
     {
         return $this->belongsTo('Laraveldaily\Quickadmin\Models\Menu', 'menu_id', 'id');
     }
+
+    public function permissions()
+    {
+        return $this->belongsTo('App\Permissions', 'permission_id', 'id');
+    }
 }

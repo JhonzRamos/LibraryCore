@@ -16,6 +16,9 @@ class GateBuilder
     private $table;
     private $template;
     private $fileName;
+    private $menu_name;
+    private $roles ;
+    private $model_name ;
     /**
      * Name of the database upon which the seed will be executed.
      *
@@ -53,12 +56,17 @@ class GateBuilder
     /**
      * Build our seeder file
      */
-    public function build()
+    public function build($name, $model, $roles)
     {
-        return $this->compactBuilder();
+//        return $this->compactBuilder();
+        $this->roles = (array)$roles;
+        $this->model_name = $model;
+        $this->menu_name = $name;
+        $this->template = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'provider';
+        $template = (string)$this->loadTemplate();
+        $template = $this->buildParts($template, $roles);
+        $this->publish($template);
 
-
-//        $this->template = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'provider';
 //
 //        $this->table = $table;
 //
@@ -68,9 +76,9 @@ class GateBuilder
 //            return in_array($user->role_id, [1]);
 //        });';
 //
-//        $template = (string)$this->loadTemplate();
-//        $template = $this->buildParts($template);
-//        $this->publish($template);
+
+
+
 
     }
 
@@ -115,13 +123,15 @@ class GateBuilder
      *
      * @return mixed
      */
-    private function buildParts($template)
+    private function buildParts($template, $roles)
     {
         $template = str_replace([
-            '$CALLS$',
+            '//MODEL//',
+            '//APPEND//',
 
         ], [
-            $this->tokenizer($this->table)
+            $this->model(),
+            $this->tokenizer()
 
         ], $template);
 
@@ -129,18 +139,24 @@ class GateBuilder
     }
 
 
-    private function tokenizer($table)
+    private function tokenizer()
     {
+        $name = $this->menu_name;
+        $template = 'Gate::define(\''.$name.'\', function ($user) { '."\r\n";
+        $template .= '            ';
+        $template .= ' return in_array($user->role_id, ['.implode(",",(array)$this->roles).']);'."\r\n";
+        $template .= '       ';
+        $template .= ' });'."\r\n";
+        $template .= '        ';
+        $template .= "//APPEND//";
+        return $template;
+    }
 
-        $template = '';
-
-        foreach ($table as $row) {
-            $seeds = new SeederBuilder();
-            $seeds->build($row);
-            $template .= '        ';
-            $template .= '$this->call('.$row["modelName"].'Seeder::class);'. "\r\n";
-        }
-
+    private function model()
+    {
+        $name = $this->model_name;
+        $template = 'use App\\'.$name.';'."\r\n";
+        $template .= "//MODEL//";
         return $template;
     }
 
@@ -151,61 +167,11 @@ class GateBuilder
     private function publish($template)
     {
 
-        file_put_contents( public_path('temp').DIRECTORY_SEPARATOR .'database'.DIRECTORY_SEPARATOR.'seeds' .DIRECTORY_SEPARATOR . $this->fileName, $template);
-
+        file_put_contents( public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR. 'Providers' . DIRECTORY_SEPARATOR  . 'AuthServiceProvider.php', $template);
     }
 
-    /**
-     * Checks if a database table exists
-     * @param string $table
-     * @return boolean
-     */
-    public function hasTable($table)
-    {
-        return Schema::connection($this->databaseName)->hasTable($table);
-    }
 
-    /**
-     * Get the Data
-     * @param  string $table
-     * @return Array
-     */
-    public function getData($table, $max, $exclude = null, $orderBy = null, $direction = 'ASC')
-    {
-        $max =0;
 
-        $result = \DB::connection($this->databaseName)->table($table);
-
-        if (!empty($exclude)) {
-            $allColumns = \DB::connection($this->databaseName)->getSchemaBuilder()->getColumnListing($table);
-            $result = $result->select(array_diff($allColumns, $exclude));
-        }
-
-        if($orderBy) {
-            $result = $result->orderBy($orderBy, $direction);
-        }
-
-        if ($max) {
-            $result = $result->limit($max);
-        }
-
-        return $result->get();
-    }
-
-    /**
-     * Generates a seed class name (also used as a filename)
-     * @param  string  $table
-     * @return string
-     */
-    public function generateClassName($table)
-    {
-        $tableString = '';
-        $tableName = explode('_', $table);
-        foreach ($tableName as $tableNameExploded) {
-            $tableString .= ucfirst($tableNameExploded);
-        }
-        return ucfirst($tableString);
-    }
 
 
 }

@@ -101,8 +101,11 @@
  +inverse seeding
  +routes name
  + removed trans in view and model
- *update DataTableSeed.php
- *route file
+ +update DataTableSeed.php
+ +route file
  *sidebar fix
  *dependencies auth|login|layouts|master|views|model|controllers|
+ +update AuthServiceProvider
+ *remove Gates when deleted
+ *create gate for exported menu
 

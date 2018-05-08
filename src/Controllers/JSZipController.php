@@ -4,6 +4,7 @@ namespace Laraveldaily\Quickadmin\Controllers;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Str;
 use Laraveldaily\Quickadmin\Builders\DataSeederBuilder;
 use Laraveldaily\Quickadmin\Builders\GateBuilder;
 use Laraveldaily\Quickadmin\Builders\ProviderBuilder;
@@ -13,6 +14,7 @@ use Laraveldaily\Quickadmin\Models\Files;
 use Laraveldaily\Quickadmin\Models\Menu;
 use Laraveldaily\Quickadmin\Models\ProjectMenus;
 use Laraveldaily\Quickadmin\Models\Projects;
+use Laraveldaily\Quickadmin\Models\RolePermissions;
 use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use ZipArchive;
@@ -39,9 +41,7 @@ class JSZipController extends Controller {
 //			return 'Not In array';
 //		}
 //
-		$gate = new ProviderBuilder();
-		$gate->build();
-		return 'success';
+
 
 
 		$rootPath = 'C:\xampp\htdocs\adminCMS3\vendor\laraveldaily\quickadmin\src\Laravel\5';
@@ -112,6 +112,12 @@ class JSZipController extends Controller {
 
 					$destination = public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR  ; //model
 					copy($row->path, $destination.$row->filename);
+
+
+					//Create Gates
+
+
+
 				}elseif($row->type == 'Migration'){
 
 
@@ -138,6 +144,20 @@ class JSZipController extends Controller {
 
 			}
 
+
+
+			$gate = new GateBuilder();
+			$gate->build($name.'_access',model, $access);
+			$gate = new GateBuilder();
+			$gate->build($name.'_create', model, $create);
+			$gate = new GateBuilder();
+			$gate->build($name.'_view',model, $view);
+			$gate = new GateBuilder();
+			$gate->build($name.'_edit',model, $edit);
+			$gate = new GateBuilder();
+			$gate->build($name.'_delete',model, $delete);
+
+
 		}
 //
 //		//create routes file
@@ -149,6 +169,8 @@ class JSZipController extends Controller {
 		//Generate Seeds
 		$seeder = new DataSeederBuilder();
 		$seeder->build($tables);
+
+
 
 
 		// Get real path for our folder__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Laravel' . DIRECTORY_SEPARATOR . '5'. DIRECTORY_SEPARATOR

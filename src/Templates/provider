@@ -3,7 +3,7 @@
 namespace App\Providers;
 use App\Role;
 use App\User;
-$MODELS$;
+//MODEL//
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -52,7 +52,7 @@ class AuthServiceProvider extends ServiceProvider
             return in_array($user->role_id, [1]);
         });
 
-        $GATES$
+        //APPEND//
 
     }
 }

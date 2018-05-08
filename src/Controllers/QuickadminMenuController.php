@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Laraveldaily\Quickadmin\Builders\ControllerBuilder;
 use Laraveldaily\Quickadmin\Builders\MigrationBuilder;
 use Laraveldaily\Quickadmin\Builders\ModelBuilder;
+use Laraveldaily\Quickadmin\Builders\ProviderBuilder;
 use Laraveldaily\Quickadmin\Builders\RequestBuilder;
 use Laraveldaily\Quickadmin\Builders\ViewsBuilder;
 use Laraveldaily\Quickadmin\Cache\QuickCache;
@@ -49,15 +51,7 @@ class QuickadminMenuController extends Controller
             ->where('parent_id', null)
             ->orderBy('position')->whereIn('id',$menus)->get();
 
-
-
-
         //menu ids
-
-
-
-
-
 
         $projects = Projects::all();
 
@@ -195,6 +189,52 @@ class QuickadminMenuController extends Controller
                 ]);
             }
         }
+
+        //Create Gates
+        $permissions = RolePermissions::where('menu_id', $menu->id)->get();
+        $camelCase      = ucfirst(Str::camel($menu->name));
+        $name    = strtolower($camelCase);
+
+        $access = array();
+        $create = array();
+        $view = array();
+        $edit = array();
+        $delete = array();
+
+        foreach($permissions as $row){
+            if($row->permission_id == 1) { //access
+                $access[] = $row->role_id;
+            }
+            if($row->permission_id == 2) {//create
+                $create[] = $row->role_id;
+            }
+            if($row->permission_id == 3) {//view
+                $view[] = $row->role_id;
+            }
+            if($row->permission_id == 4) { //edit
+                $edit[] = $row->role_id;
+            }
+            if($row->permission_id == 5) { //delete
+                $delete[] = $row->role_id;
+            }
+        }
+
+
+
+        $gate = new ProviderBuilder();
+        $gate->build($name.'_access', $access);
+        $gate = new ProviderBuilder();
+        $gate->build($name.'_create', $create);
+        $gate = new ProviderBuilder();
+        $gate->build($name.'_view', $view);
+        $gate = new ProviderBuilder();
+        $gate->build($name.'_edit', $edit);
+        $gate = new ProviderBuilder();
+        $gate->build($name.'_delete', $delete);
+
+
+
+
 
 //        return 'test';
         // Init QuickCache
