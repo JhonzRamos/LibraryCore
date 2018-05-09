@@ -115,6 +115,8 @@ class JSZipController extends Controller {
 
 
 					//Create Gates
+					$gate = new GateBuilder();
+					$gate->build($key, $this->getBetween($content, $start1, $end1));
 
 
 
@@ -146,16 +148,6 @@ class JSZipController extends Controller {
 
 
 
-			$gate = new GateBuilder();
-			$gate->build($name.'_access',model, $access);
-			$gate = new GateBuilder();
-			$gate->build($name.'_create', model, $create);
-			$gate = new GateBuilder();
-			$gate->build($name.'_view',model, $view);
-			$gate = new GateBuilder();
-			$gate->build($name.'_edit',model, $edit);
-			$gate = new GateBuilder();
-			$gate->build($name.'_delete',model, $delete);
 
 
 		}

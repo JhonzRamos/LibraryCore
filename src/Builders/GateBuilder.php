@@ -10,9 +10,15 @@ use Laraveldaily\Quickadmin\Models\Files;
 use Laraveldaily\Quickadmin\Models\Menu;
 use Laraveldaily\Quickadmin\Models\ProjectMenus;
 use Laraveldaily\Quickadmin\Models\Projects;
+use Laraveldaily\Quickadmin\Models\RolePermissions;
 
 class GateBuilder
 {
+    protected $access;
+    protected $create;
+    protected $view;
+    protected $edit;
+    protected $delete;
     private $table;
     private $template;
     private $fileName;
@@ -56,15 +62,53 @@ class GateBuilder
     /**
      * Build our seeder file
      */
-    public function build($name, $model, $roles)
+    public function build($menu_id,$model)
     {
 //        return $this->compactBuilder();
-        $this->roles = (array)$roles;
+
+        //Create Gates
+        $permissions = RolePermissions::where('menu_id', $menu_id)->get();
+        $menu = Menu::findorfail($menu_id);
+        $camelCase      = ucfirst(Str::camel($menu->name));
+        $name    = strtolower($camelCase);
         $this->model_name = $model;
         $this->menu_name = $name;
-        $this->template = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'provider';
+        $this->access = array();
+        $this->create = array();
+        $this->view = array();
+        $this->edit = array();
+        $this->delete = array();
+
+        foreach($permissions as $row){
+            if($row->permission_id == 1) { //access
+                $this->access[] = $row->role_id;
+            }
+            if($row->permission_id == 2) {//create
+                $this->create[] = $row->role_id;
+            }
+            if($row->permission_id == 3) {//view
+                $this->view[] = $row->role_id;
+            }
+            if($row->permission_id == 4) { //edit
+                $this->edit[] = $row->role_id;
+            }
+            if($row->permission_id == 5) { //delete
+                $this->delete[] = $row->role_id;
+            }
+        }
+
+
+
+
+        $this->template =  public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR. 'Providers' . DIRECTORY_SEPARATOR  . 'AuthServiceProvider.php';
+
+
         $template = (string)$this->loadTemplate();
-        $template = $this->buildParts($template, $roles);
+
+
+        $template = $this->buildParts($template);
+
+
         $this->publish($template);
 
 //
@@ -123,7 +167,7 @@ class GateBuilder
      *
      * @return mixed
      */
-    private function buildParts($template, $roles)
+    private function buildParts($template)
     {
         $template = str_replace([
             '//MODEL//',
@@ -141,21 +185,36 @@ class GateBuilder
 
     private function tokenizer()
     {
+        $permissions = ['access', 'create', 'view', 'edit', 'delete'];
+        $roles = array(
+            $this->access,
+            $this->create,
+            $this->view,
+            $this->edit,
+            $this->delete,
+        );
         $name = $this->menu_name;
-        $template = 'Gate::define(\''.$name.'\', function ($user) { '."\r\n";
-        $template .= '            ';
-        $template .= ' return in_array($user->role_id, ['.implode(",",(array)$this->roles).']);'."\r\n";
-        $template .= '       ';
-        $template .= ' });'."\r\n";
-        $template .= '        ';
+        $template ='';
+
+        foreach($permissions as $key=>$value){
+            $template .= 'Gate::define(\''.$name.'_'.$value.'\', function ($user) { '."\r\n";
+            $template .= '            ';
+            $template .= ' return in_array($user->role_id, ['.implode(",",$roles[$key]).']);'."\r\n";
+            $template .= '       ';
+            $template .= ' });'."\r\n";
+            $template .= '        ';
+
+        }
+
         $template .= "//APPEND//";
+
         return $template;
     }
 
     private function model()
     {
-        $name = $this->model_name;
-        $template = 'use App\\'.$name.';'."\r\n";
+        $template = '';
+        $template .= 'use App\\'.$this->model_name.';'."\r\n";
         $template .= "//MODEL//";
         return $template;
     }
@@ -166,7 +225,6 @@ class GateBuilder
      */
     private function publish($template)
     {
-
         file_put_contents( public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR. 'Providers' . DIRECTORY_SEPARATOR  . 'AuthServiceProvider.php', $template);
     }
 
