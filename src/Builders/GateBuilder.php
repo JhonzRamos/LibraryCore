@@ -228,8 +228,4 @@ class GateBuilder
         file_put_contents( public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR. 'Providers' . DIRECTORY_SEPARATOR  . 'AuthServiceProvider.php', $template);
     }
 
-
-
-
-
 }
