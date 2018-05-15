@@ -124,6 +124,18 @@ class SeederBuilder
         return $template;
     }
 
+    private function dataBuilder($data)
+    {
+        $compact = '[';
+        foreach($data as $value){
+            $compact = '[';
+            $compact .= "'" . implode ( "', '", $value ) . "'";
+            $compact .= '],';
+        }
+        $compact .= ']';
+
+        return $compact;
+    }
 
     private function tokenizer($template)
     {
@@ -131,11 +143,13 @@ class SeederBuilder
             '":',
             '{',
             '}',
+            '"',
 
         ], [
             '"=>',
             '[',
             ']',
+            '\'',
 
         ], $template);
 

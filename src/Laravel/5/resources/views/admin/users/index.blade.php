@@ -1,85 +1,215 @@
-@inject('request', 'Illuminate\Http\Request')
-@extends('layouts.app')
-
+@extends('admin.layouts.master')
+@section('title', 'User')
 @section('content')
-    <h3 class="page-title">@lang('quickadmin.users.title')</h3>
-    @can('user_create')
-    <p>
-        <a href="{{ route('admin.users.create') }}" class="btn btn-success">@lang('quickadmin.qa_add_new')</a>
-        
-    </p>
-    @endcan
 
-    
+    <h3 class="page-title">User</h3>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            @lang('quickadmin.qa_list')
-        </div>
+    <div class="row">
+        <div class="col-md-12">
 
-        <div class="panel-body table-responsive">
-            <table class="table table-bordered table-striped {{ count($users) > 0 ? 'datatable' : '' }} @can('user_delete') dt-select @endcan">
-                <thead>
-                    <tr>
-                        @can('user_delete')
-                            <th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
-                        @endcan
+            @if (Session::has('message'))
+                <div class="alert alert-info">
+                    <p>{{ Session::get('message') }}</p>
+                </div>
+            @endif
+            @if ($errors->count() > 0)
+                <div class="alert alert-danger">
+                    <ul class="list-unstyled">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-users fa-fw"></i>user</h3>
+                </div>
+                <div class="box-body">
+                    <div class="flexigrid">
+                        <div class="row">
+                            <div class="tDiv3 col-md-12 " style="margin: 0 0 10px;text-align: left;">
+                                <div class="btn-group">
+                                    <!-- Button Export  -->
+                                    <a class="export-anchor btn btn-success"
+                                       data-url="#"
+                                       target="_blank">
+                                        <i class="fa fa-file-excel-o"></i>
+                                        <span class="export">Export</span>
+                                    </a>
+                                    <!-- Akhir Button Export  -->
+                                    <a class="print-anchor btn btn-primary"
+                                       data-url="#">
+                                        <i class="fa fa-print"></i>
+                                        <span class="print">Print</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-hover table-responsive table-bordered" id="ResuDataTable">
+                        <thead>
+                        <tr>
+                            <th>
+                                {!! Form::checkbox('delete_all',1,false,['class' => 'mass']) !!}
+                            </th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
 
-                        <th>@lang('quickadmin.users.fields.name')</th>
-                        <th>@lang('quickadmin.users.fields.email')</th>
-                        <th>@lang('quickadmin.users.fields.role')</th>
-                                                <th>&nbsp;</th>
-
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    @if (count($users) > 0)
-                        @foreach ($users as $user)
-                            <tr data-entry-id="{{ $user->id }}">
-                                @can('user_delete')
-                                    <td></td>
-                                @endcan
-
-                                <td field-key='name'>{{ $user->name }}</td>
-                                <td field-key='email'>{{ $user->email }}</td>
-                                <td field-key='role'>{{ $user->role->title or '' }}</td>
-                                                                <td>
-                                    @can('user_view')
-                                    <a href="{{ route('admin.users.show',[$user->id]) }}" class="btn btn-xs btn-primary">@lang('quickadmin.qa_view')</a>
+                            <th>
+                                <div class="btn-group tools">
+                                    @can('user_create')
+                                    <button action="form" type="button" onclick="location.href ='{{ route('admin'.'.users.create') }}'" class="btn btn-default btn-sm fa">+</button>
                                     @endcan
-                                    @can('user_edit')
-                                    <a href="{{ route('admin.users.edit',[$user->id]) }}" class="btn btn-xs btn-info">@lang('quickadmin.qa_edit')</a>
-                                    @endcan
-                                    @can('user_delete')
-{!! Form::open(array(
-                                        'style' => 'display: inline-block;',
-                                        'method' => 'DELETE',
-                                        'onsubmit' => "return confirm('".trans("quickadmin.qa_are_you_sure")."');",
-                                        'route' => ['admin.users.destroy', $user->id])) !!}
-                                    {!! Form::submit(trans('quickadmin.qa_delete'), array('class' => 'btn btn-xs btn-danger')) !!}
-                                    {!! Form::close() !!}
-                                    @endcan
+                                    <div class="btn-group">
+                                        <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
+                                                data-toggle="dropdown" aria-expanded="false"></button>
+                                        <ul class="dropdown-menu pull-right ColumnToggle" role="menu">
+                                            <li action="form" data-column="1" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Name</a></li>
+                                            <li action="form" data-column="2" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Email</a></li>
+                                            <li action="form" data-column="3" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Role</a></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        @foreach ($users as $row)
+                            <tr>
+                                <td>
+                                    {!! Form::checkbox('del-'.encrypt($row->id),1,false,['class' => 'single','data-id'=> encrypt($row->id)]) !!}
                                 </td>
+                                <td>{{ $row->name }}</td>
+                                <td>{{ $row->email }}</td>
+                                <td>{{ isset($row->role->title) ? $row->role->title : '' }}</td>
 
+                                <td>
+
+                                    <div class="btn-group tools">
+                                        @can('user_view')
+                                        <button type="button" onclick="location.href ='{{route('admin'.'.users.show', array(encrypt($row->id))) }}'" class="btn btn-default btn-sm fa fa-search"></button>
+                                        @endcan
+                                        @if(Gate::allows('user_edit') || Gate::allows('user_delete'))
+                                            <div class="btn-group">
+                                                <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
+                                                        data-toggle="dropdown"></button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    @can('user_edit')
+                                                    <li action="form"><a href="{{route('admin'.'.users.edit', array(encrypt($row->id))) }}"><i class="fa fa-pencil-square-o"></i>Edit</a></li>
+                                                    @endcan
+                                                    @can('user_delete')
+                                                    <li action="delete"><a href="#" data-toggle="modal" id="{{encrypt($row->id)}}" data-route="{{route('admin'.'.users.destroy', encrypt($row->id))}}" data-target="#mDelete">
+                                                            <i class="fa fa-minus"></i>Delete</a></li>
+                                                    @endcan
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                </td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="10">@lang('quickadmin.qa_no_entries_in_table')</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            @can('user_delete')
+                            <button class="btn btn-danger" id="delete">Delete checked</button>
+                            @endcan
+                        </div>
+                    </div>
+                    {!! Form::open(['route' => 'admin'.'.users.massDelete', 'method' => 'post', 'id' => 'massDelete']) !!}
+                    <input type="hidden" id="send" name="toDelete">
+                    {!! Form::close() !!}
+                </div>
+            </div>
+            <div id="eModalContainer">
+                <div class="modal fade" id="mDelete">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            {!! Form::open(array('method' => 'DELETE', 'id' => 'deleteEntry')) !!}
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Delete</h4>
+                            </div>
+                            <div class="modal-body">
+                                {{csrf_field()}}
+                                {{method_field('DELETE')}}
+                                <p id="deleteMessage"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close
+                                </button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                            {!! Form::close() !!}
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+            </div>
         </div>
     </div>
-@stop
 
-@section('javascript') 
-    <script>
-        @can('user_delete')
-            window.route_mass_crud_entries_destroy = '{{ route('admin.users.mass_destroy') }}';
-        @endcan
-
-    </script>
 @endsection
+
+@section('javascript')
+    <script>
+        $(document).ready(function () {
+            $('#delete').click(function () {
+                if (window.confirm('Are you sure you want to delete the items?')) {
+                    var send = $('#send');
+                    var mass = $('.mass').is(":checked");
+                    if (mass == true) {
+                        send.val('mass');
+                    } else {
+                        var toDelete = [];
+                        $('.single').each(function () {
+                            if ($(this).is(":checked")) {
+                                toDelete.push($(this).data('id'));
+                            }
+                        });
+                        send.val(JSON.stringify(toDelete));
+                    }
+                    $('#massDelete').submit();
+                }
+            });
+            var table = $('#ResuDataTable').DataTable({"columnDefs":[{"width":"30px","targets":0,"searchable":false,"orderable":false,"visible":true},{"targets":1,"searchable":true,"orderable":true,"visible":true},{"targets":2,"searchable":true,"orderable":true,"visible":true},{"targets":3,"searchable":true,"orderable":true,"visible":true},{"targets":3,"searchable":true,"orderable":true,"visible":true},{"targets":3,"searchable":true,"orderable":true,"visible":true},{"width":"200px","targets":4,"searchable":false,"orderable":false,"visible":true}]});
+            $('.toggle-vis').on('click', function (e) {
+                e.preventDefault();
+
+                // Get the column API object
+                var column = table.column($(this).attr('data-column'));
+
+                // Toggle the visibility
+                column.visible(!column.visible());
+
+
+                if (!column.visible() == true) {
+                    $(this).removeClass('Checked');
+                } else {
+                    $(this).addClass('Checked');
+                }
+
+            });
+        });
+    </script>
+    <script>
+        $('#mDelete').on('show.bs.modal', function(e) {
+            var id     = e.relatedTarget.id,
+                    name = 'this entry',
+                    modal    = $(this);
+            $('#deleteMessage').replaceWith(' <p> Comfirm delete '+name+' ?</p>');
+            $('#deleteEntry').attr('action', e.relatedTarget.dataset.route);
+        });
+    </script>
+@stop

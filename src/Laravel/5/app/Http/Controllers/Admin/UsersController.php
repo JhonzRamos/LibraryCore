@@ -2,158 +2,133 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Role;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreUsersRequest;
-use App\Http\Requests\Admin\UpdateUsersRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
     /**
-     * Display a listing of User.
-     *
-     * @return \Illuminate\Http\Response
+     * Show a list of users
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        if (! Gate::allows('user_access')) {
-            return abort(401);
-        }
-
-
-                $users = User::all();
+        $users = User::all();
 
         return view('admin.users.index', compact('users'));
     }
 
     /**
-     * Show the form for creating new User.
-     *
-     * @return \Illuminate\Http\Response
+     * Show a page of user creation
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        if (! Gate::allows('user_create')) {
-            return abort(401);
-        }
-        
-        $roles = \App\Role::get()->pluck('title', 'id')->prepend(trans('quickadmin.qa_please_select'), '');
+        $roles = Role::pluck('title', 'id');
 
         return view('admin.users.create', compact('roles'));
     }
 
     /**
-     * Store a newly created User in storage.
+     * Insert new user into the system
      *
-     * @param  \App\Http\Requests\StoreUsersRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreUsersRequest $request)
-    {
-        if (! Gate::allows('user_create')) {
-            return abort(401);
-        }
-        $user = User::create($request->all());
-
-
-
-        return redirect()->route('admin.users.index');
-    }
-
-
-    /**
-     * Show the form for editing User.
+     * @param Request $request
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function edit($id)
+    public function store(Request $request)
     {
-        if (! Gate::allows('user_edit')) {
-            return abort(401);
-        }
-        
-        $roles = \App\Role::get()->pluck('title', 'id')->prepend(trans('quickadmin.qa_please_select'), '');
+        $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
+        $user = User::create($input);
 
-        $user = User::findOrFail($id);
-
-        return view('admin.users.edit', compact('user', 'roles'));
+        return redirect()->route('admin.users.index')->withMessage(trans('quickadmin::admin.users-controller-successfully_created'));
     }
-
     /**
-     * Update User in storage.
-     *
-     * @param  \App\Http\Requests\UpdateUsersRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateUsersRequest $request, $id)
-    {
-        if (! Gate::allows('user_edit')) {
-            return abort(401);
-        }
-        $user = User::findOrFail($id);
-        $user->update($request->all());
-
-
-
-        return redirect()->route('admin.users.index');
-    }
-
-
-    /**
-     * Display User.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        if (! Gate::allows('user_view')) {
-            return abort(401);
-        }
-        $user = User::findOrFail($id);
+        $users = User::find(decrypt($id));
+        $roles = Role::pluck("title", "id")->prepend('Please select', 0);
 
-        return view('admin.users.show', compact('user'));
+
+        $view = "view";
+        return view('admin.users.edit', compact('users', "roles", 'view' ));
+    }
+    /**
+     * Show a user edit page
+     *
+     * @param $id
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit($id)
+    {
+        $users  = User::findOrFail(decrypt($id));
+        $roles = Role::pluck('title', 'id');
+
+        return view('admin.users.edit', compact('users', 'roles'));
     }
 
+    /**
+     * Update our user information
+     *
+     * @param Request $request
+     * @param         $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail(decrypt($id));
+        $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
+        $user->update($input);
+
+        return redirect()->route('admin.users.index')->withMessage(trans('quickadmin::admin.users-controller-successfully_updated'));
+    }
 
     /**
-     * Remove User from storage.
+     * Destroy specific user
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
-        if (! Gate::allows('user_delete')) {
-            return abort(401);
-        }
-        $user = User::findOrFail($id);
-        $user->delete();
+        $user = User::findOrFail(decrypt($id));
+        User::destroy(decrypt($id));
 
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index')->withMessage(trans('quickadmin::admin.users-controller-successfully_deleted'));
     }
 
     /**
-     * Delete all selected User at once.
-     *
+     * Mass delete function from index page
      * @param Request $request
+     *
+     * @return mixed
      */
-    public function massDestroy(Request $request)
+    public function massDelete(Request $request)
     {
-        if (! Gate::allows('user_delete')) {
-            return abort(401);
-        }
-        if ($request->input('ids')) {
-            $entries = User::whereIn('id', $request->input('ids'))->get();
+        if ($request->get('toDelete') != 'mass') {
+            $toDelete = json_decode($request->get('toDelete'));
 
-            foreach ($entries as $entry) {
-                $entry->delete();
+            foreach($toDelete as $row){
+                $toDelete[$row] = decrypt($row);
             }
+            User::destroy($toDelete);
+        } else {
+            User::whereNotNull('id')->delete();
         }
-    }
 
+        return redirect()->route('admin'.'.users.index');
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'skin' => 'skin-blue-light',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -11,8 +11,9 @@ return [
     | framework needs to place the application's name in a notification or
     | any other location as required by the application or its packages.
     */
-
-    'name' => 'Trial2',
+    'landing' => '$LANDING$',
+    'skin' => '$SKIN$',
+    'name' => '$NAME$',
 
     /*
     |--------------------------------------------------------------------------

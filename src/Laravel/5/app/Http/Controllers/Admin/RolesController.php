@@ -1,155 +1,97 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Role;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreRolesRequest;
-use App\Http\Requests\Admin\UpdateRolesRequest;
 
 class RolesController extends Controller
 {
     /**
-     * Display a listing of Role.
-     *
-     * @return \Illuminate\Http\Response
+     * @var Role
+     */
+    protected $roles;
+
+    public function __construct(Role $roles)
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * Show a list of roles
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        if (! Gate::allows('role_access')) {
-            return abort(401);
-        }
-
-
-                $roles = Role::all();
+        $roles = $this->roles->get();
 
         return view('admin.roles.index', compact('roles'));
     }
 
     /**
-     * Show the form for creating new Role.
-     *
-     * @return \Illuminate\Http\Response
+     * Show a page of user creation
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        if (! Gate::allows('role_create')) {
-            return abort(401);
-        }
         return view('admin.roles.create');
     }
 
     /**
-     * Store a newly created Role in storage.
+     * Insert new role into the system
      *
-     * @param  \App\Http\Requests\StoreRolesRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StoreRolesRequest $request)
+    public function store(Request $request)
     {
-        if (! Gate::allows('role_create')) {
-            return abort(401);
-        }
-        $role = Role::create($request->all());
+        $this->roles->create($request->only('title'));
 
-
-
-        return redirect()->route('admin.roles.index');
+        return redirect()->route('roles.index')->withMessage(trans('quickadmin::admin.roles-controller-successfully_created'));
     }
 
-
     /**
-     * Show the form for editing Role.
+     * Show a role edit page
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     *
+     * @return \Illuminate\View\View
      */
     public function edit($id)
     {
-        if (! Gate::allows('role_edit')) {
-            return abort(401);
-        }
-        $role = Role::findOrFail($id);
+        $role = $this->roles->findOrFail($id);
 
         return view('admin.roles.edit', compact('role'));
     }
 
     /**
-     * Update Role in storage.
+     * Update our role information
      *
-     * @param  \App\Http\Requests\UpdateRolesRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param         $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateRolesRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        if (! Gate::allows('role_edit')) {
-            return abort(401);
-        }
-        $role = Role::findOrFail($id);
-        $role->update($request->all());
+        $this->roles->findOrFail($id)->update($request->only('title'));
 
-
-
-        return redirect()->route('admin.roles.index');
+        return redirect()->route('roles.index')->withMessage(trans('quickadmin::admin.roles-controller-successfully_updated'));
     }
 
-
     /**
-     * Display Role.
+     * Destroy specific role
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        if (! Gate::allows('role_view')) {
-            return abort(401);
-        }
-        $users = \App\User::where('role_id', $id)->get();
-
-        $role = Role::findOrFail($id);
-
-        return view('admin.roles.show', compact('role', 'users'));
-    }
-
-
-    /**
-     * Remove Role from storage.
+     * @param $id
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
-        if (! Gate::allows('role_delete')) {
-            return abort(401);
-        }
-        $role = Role::findOrFail($id);
-        $role->delete();
+        $this->roles->findOrFail($id)->delete();
 
-        return redirect()->route('admin.roles.index');
+        return redirect()->route('roles.index')->withMessage(trans('quickadmin::admin.roles-controller-successfully_deleted'));
     }
-
-    /**
-     * Delete all selected Role at once.
-     *
-     * @param Request $request
-     */
-    public function massDestroy(Request $request)
-    {
-        if (! Gate::allows('role_delete')) {
-            return abort(401);
-        }
-        if ($request->input('ids')) {
-            $entries = Role::whereIn('id', $request->input('ids'))->get();
-
-            foreach ($entries as $entry) {
-                $entry->delete();
-            }
-        }
-    }
-
 }
+

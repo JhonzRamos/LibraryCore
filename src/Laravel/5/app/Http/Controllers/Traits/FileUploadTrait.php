@@ -13,50 +13,46 @@ trait FileUploadTrait
      */
     public function saveFiles(Request $request)
     {
-
-		$uploadPath = public_path(env('UPLOAD_PATH'));
-		$thumbPath = public_path(env('UPLOAD_PATH').'/thumb');
-        if (! file_exists($uploadPath)) {
-            mkdir($uploadPath, 0775);
-            mkdir($thumbPath, 0775);
+        if (!file_exists(public_path('uploads'))) {
+            mkdir(public_path('uploads'), 0777);
+            mkdir(public_path('uploads/thumb'), 0777);
         }
 
-        $finalRequest = $request;
 
         foreach ($request->all() as $key => $value) {
             if ($request->hasFile($key)) {
-                if ($request->has($key . '_max_width') && $request->has($key . '_max_height')) {
+                if ($request->has($key . '_w') && $request->has($key . '_h')) {
                     // Check file width
                     $filename = time() . '-' . $request->file($key)->getClientOriginalName();
                     $file     = $request->file($key);
                     $image    = Image::make($file);
-                    if (! file_exists($thumbPath)) {
-                        mkdir($thumbPath, 0775, true);
+                    if (! file_exists(public_path('uploads/thumb'))) {
+                        mkdir(public_path('uploads/thumb'), 0775, true);
                     }
-                    Image::make($file)->resize(50, 50)->save($thumbPath . '/' . $filename);
+                    Image::make($file)->resize(160, 160)->save(public_path('uploads/thumb') . '/' . $filename);
                     $width  = $image->width();
                     $height = $image->height();
-                    if ($width > $request->{$key . '_max_width'} && $height > $request->{$key . '_max_height'}) {
-                        $image->resize($request->{$key . '_max_width'}, $request->{$key . '_max_height'});
-                    } elseif ($width > $request->{$key . '_max_width'}) {
-                        $image->resize($request->{$key . '_max_width'}, null, function ($constraint) {
+                    if ($width > $request->{$key . '_w'} && $height > $request->{$key . '_h'}) {
+                        $image->resize($request->{$key . '_w'}, $request->{$key . '_h'});
+                    } elseif ($width > $request->{$key . '_w'}) {
+                        $image->resize($request->{$key . '_w'}, null, function ($constraint) {
                             $constraint->aspectRatio();
                         });
-                    } elseif ($height > $request->{$key . '_max_width'}) {
-                        $image->resize(null, $request->{$key . '_max_height'}, function ($constraint) {
+                    } elseif ($height > $request->{$key . '_w'}) {
+                        $image->resize(null, $request->{$key . '_h'}, function ($constraint) {
                             $constraint->aspectRatio();
                         });
                     }
-                    $image->save($uploadPath . '/' . $filename);
-                    $finalRequest = new Request(array_merge($finalRequest->all(), [$key => $filename]));
+                    $image->save(public_path('uploads') . '/' . $filename);
+                    $request = new Request(array_merge($request->all(), [$key => $filename]));
                 } else {
                     $filename = time() . '-' . $request->file($key)->getClientOriginalName();
-                    $request->file($key)->move($uploadPath, $filename);
-                    $finalRequest = new Request(array_merge($finalRequest->all(), [$key => $filename]));
+                    $request->file($key)->move(public_path('uploads'), $filename);
+                    $request = new Request(array_merge($request->all(), [$key => $filename]));
                 }
             }
         }
 
-        return $finalRequest;
+        return $request;
     }
 }

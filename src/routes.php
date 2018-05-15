@@ -65,6 +65,13 @@ Route::group([
         'middleware' => 'role'
     ], function () {
         // Menu routing
+
+
+        Route::get(config('quickadmin.route') . '/project', [
+            'as'   => 'projects',
+            'uses' => 'ProjectsController@index'
+        ]);
+
         Route::get(config('quickadmin.route') . '/menu', [
             'as'   => 'menu',
             'uses' => 'QuickadminMenuController@index'
@@ -159,14 +166,14 @@ Route::group([
             'uses' => 'JSZipController@download',
         ]);
 //
-//        Route::get(config('quickadmin.route') . '/forms', [
-//            'as'   => 'forms.builder',
-//            'uses' => 'FormsController@index'
-//        ]);
-
-        Route::get(config('quickadmin.route') . '/forms', function(){
-            return view('qa::forms.index');
-        });
+        Route::get(config('quickadmin.route') . '/forms', [
+            'as'   => 'forms.builder',
+            'uses' => 'ProjectsController@index'
+        ]);
+//
+//        Route::get(config('quickadmin.route') . '/forms', function(){
+//            return view('qa::forms.index');
+//        });
 
 
     });

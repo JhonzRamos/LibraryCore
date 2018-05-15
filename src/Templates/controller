@@ -52,7 +52,7 @@ class $CLASS$ extends Controller {
 		$RELATIONSHIPS$
 		$ENUM$
 		$view = "view";
-		return view('admin.$COLLECTION$.edit', compact('$RESOURCE$'$RELATIONSHIP_COMPACT_EDIT$, 'view' ));
+		return view('admin.$COLLECTION$.show', compact('$RESOURCE$'$RELATIONSHIP_COMPACT_EDIT$, 'view' ));
 	}
 
 

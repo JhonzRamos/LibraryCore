@@ -39,14 +39,14 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('name', 'Table Name', ['class'=>'col-sm-2 control-label']) !!}
+                        {!! Form::label('name', 'Table Name*', ['class'=>'col-sm-2 control-label']) !!}
                         <div class="col-sm-10">
                             {!! Form::text('name', old('name'), ['class'=>'form-control', 'placeholder'=> trans('quickadmin::qa.menus-createCrud-crud_name_placeholder')]) !!}
                         </div>
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('title', 'Menu Name', ['class'=>'col-sm-2 control-label']) !!}
+                        {!! Form::label('title', 'Menu Name*', ['class'=>'col-sm-2 control-label']) !!}
                         <div class="col-sm-10">
                             {!! Form::text('title', old('title'), ['class'=>'form-control', 'placeholder'=> trans('quickadmin::qa.menus-createCrud-crud_title_placeholder'), 'required'=> 'required']) !!}
                         </div>

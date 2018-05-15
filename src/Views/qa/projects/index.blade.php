@@ -16,114 +16,58 @@
         </div>
     </div>
 
-    <div class="box">
+    <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">{{ trans('quickadmin::templates.templates-view_index-list') }}</h3>
+            <h3 class="box-title">Project</h3>
         </div>
         <div class="box-body">
-            <div class="flexigrid">
-                <div class="row">
-                    <div class="tDiv3 col-md-12 " style="margin: 0 0 10px;text-align: left;">
+            <table class="table table-striped table-hover table-bordered" width="100%"  id="">
+                <thead>
+                <th>ID</th>
+                <th>Project Name</th>
+                <th>Version</th>
+                <th>Skin</th>
+                <th>
+                    <div class="btn-group tools">
+                        <button action="form" type="button" onclick="location.href ='{{route('projects.create')}}'" class="btn btn-default btn-sm fa">+</button>
                         <div class="btn-group">
-                            <!-- Button Export  -->
-                            <a class="export-anchor btn btn-success"
-                               data-url="#"
-                               target="_blank">
-                                <i class="fa fa-file-excel-o"></i>
-                                <span class="export">Export</span>
-                            </a>
-                            <!-- Akhir Button Export  -->
-                            <a class="print-anchor btn btn-primary"
-                               data-url="#">
-                                <i class="fa fa-print"></i>
-                                <span class="print">Print</span>
-                            </a>
+                            <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
+                                    data-toggle="dropdown" aria-expanded="false"></button>
+                            <ul class="dropdown-menu pull-right ColumnToggle" role="menu">
+                                <li action="form" data-column="0" class="toggle-vis Checked">
+                                    <a href="javascript:void(0)"><i class="fa fa-check"></i>ID</a>
+                                </li>
+                                <li action="form" data-column="1" class="toggle-vis Checked">
+                                    <a href="javascript:void(0)"><i class="fa fa-check"></i>Project Name</a>
+                                </li>
+                                <li action="form" data-column="2" class="toggle-vis Checked">
+                                    <a href="javascript:void(0)"><i class="fa fa-check"></i>Version</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </div>
-            </div>
-            <table class="table table-striped table-hover table-responsive table-bordered" id="ProjectsDataTable">
-                <thead>
-                    <tr>
-                        <th>
-                            {!! Form::checkbox('delete_all',1,false,['class' => 'mass']) !!}
-                        </th>
-                        <th>Project Name</th>
-<th>Project Title</th>
-<th>Laravel Version</th>
-
-                        <th>
-                            <div class="btn-group tools">
-                                @if(Auth::user()->role->canCreate(explode('/',Request::path())[1]))
-                                <button action="form" type="button" onclick="location.href ='{{ route('projects.create') }}'" class="btn btn-default btn-sm fa">+</button>
-                                @endif
-                                <div class="btn-group">
-                                    <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
-                                            data-toggle="dropdown" aria-expanded="false"></button>
-                                    <ul class="dropdown-menu pull-right ColumnToggle" role="menu">
-                                       <li action="form" data-column="1" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Project Name</a></li>
-<li action="form" data-column="2" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Project Title</a></li>
-<li action="form" data-column="3" class="toggle-vis Checked"><a href="javascript:void(0)"><i class="fa fa-check"></i>Laravel Version</a></li>
-
-                                    </ul>
-                                </div>
-                            </div>
-                        </th>
-                    </tr>
+                </th>
                 </thead>
 
                 <tbody>
-                    @foreach ($projects as $row)
-                        <tr>
-                            <td>
-                                {!! Form::checkbox('del-'.encrypt($row->id),1,false,['class' => 'single','data-id'=> encrypt($row->id)]) !!}
-                            </td>
-                            <td>{{ $row->name }}</td>
-<td>{{ $row->title }}</td>
-<td>{{ $row->version }}</td>
-
-                            <td>
-
-                                <div class="btn-group tools">
-                                    @if(Auth::user()->role->canView(explode('/',Request::path())[1]))
-                                    <button type="button" onclick="location.href ='{{route('projects.show', array(encrypt($row->id))) }}'" class="btn btn-default btn-sm fa fa-search"></button>
-                                    @endif
-                                    @if(Auth::user()->role->canEdit(explode('/',Request::path())[1])==true ||  Auth::user()->role->canDelete(explode('/',Request::path())[1])==true)
-                                    <div class="btn-group">
-                                        <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
-                                                data-toggle="dropdown"></button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                             @if(Auth::user()->role->canEdit(explode('/',Request::path())[1]))
-                                            <li action="form"><a href="{{route('projects.edit', array(encrypt($row->id))) }}"><i class="fa fa-pencil-square-o"></i>Edit</a></li>
-                                             @endif
-                                            @if(Auth::user()->role->canDelete(explode('/',Request::path())[1]))
-                                            <li action="delete"><a href="#" data-toggle="modal" id="{{encrypt($row->id)}}" data-route="{{route('projects.destroy', encrypt($row->id))}}" data-target="#mDelete">
-                                                    <i class="fa fa-minus"></i>Delete</a></li>
-                                             @endif
-                                        </ul>
-                                    </div>
-                                   @endif
-                                </div>
-
-                            </td>
-                        </tr>
-                    @endforeach
+                @foreach($projects as $row)
+                    <tr>
+                        <td>{{$row->id}}</td>
+                        <td>{{$row->title}}</td>
+                        <td>{{$row->version}}</td>
+                        <td>{{ $row->skin }}</td>
+                        <td>
+                            <a href="{{route('projects.active', $row->id)}}" class="btn {{($row->active == 1)? 'btn-primary':'btn-default'}} btn-xs btn-flat">Active</a>
+                            <a href="{{route('projects.edit', $row->id)}}" class="btn btn-info btn-xs btn-flat">Edit</a>
+                            <a href="{{route('download.zip', $row->id)}}" class="btn btn-success btn-xs btn-flat">Download</a>
+                        </td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
-            <div class="row">
-                <div class="col-xs-12">
-                 @if(Auth::user()->role->canDelete(explode('/',Request::path())[1]))
-                    <button class="btn btn-danger" id="delete">
-                        {{ trans('quickadmin::templates.templates-view_index-delete_checked') }}
-                    </button>
-                 @endif
-                </div>
-            </div>
-            {!! Form::open(['route' => 'projects.massDelete', 'method' => 'post', 'id' => 'massDelete']) !!}
-                <input type="hidden" id="send" name="toDelete">
-            {!! Form::close() !!}
+
         </div>
-	</div>
+    </div>
 	 <div id="eModalContainer">
                 <div class="modal fade" id="mDelete">
                     <div class="modal-dialog">

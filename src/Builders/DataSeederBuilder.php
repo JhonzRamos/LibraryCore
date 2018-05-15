@@ -112,7 +112,7 @@ class DataSeederBuilder
             $seeds = new SeederBuilder();
             $seeds->build($row);
             $template .= '        ';
-            $template .= '$this->call('.$row["modelName"].'Seeder::class);'. "\r\n";
+            $template .= '$this->call('.$row["modelName"].'Seed::class);'. "\r\n";
         }
 
         return $template;

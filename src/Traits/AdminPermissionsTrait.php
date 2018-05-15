@@ -35,6 +35,7 @@ trait AdminPermissionsTrait
             'users',
             'files',
             'roles',
+            'forms',
             'projects',
             'download',
             'actions'
