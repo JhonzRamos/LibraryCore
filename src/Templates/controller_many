@@ -63,7 +63,7 @@ class $CLASS$ extends Controller {
 
 		$view = "view";
 
-		return view('admin.$COLLECTION$.edit', compact('$RESOURCE$'$RELATIONSHIP_COMPACT_EDIT$, 'view' ));
+		return view('admin.$COLLECTION$.show', compact('$RESOURCE$'$RELATIONSHIP_COMPACT_EDIT$, 'view' ));
 
 	}
 

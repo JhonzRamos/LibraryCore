@@ -5,11 +5,13 @@ namespace Laraveldaily\Quickadmin\Controllers;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Str;
+use Laraveldaily\Quickadmin\Builders\ConfigBuilder;
 use Laraveldaily\Quickadmin\Builders\DataSeederBuilder;
 use Laraveldaily\Quickadmin\Builders\GateBuilder;
 use Laraveldaily\Quickadmin\Builders\ProviderBuilder;
 use Laraveldaily\Quickadmin\Builders\RoutesBuilder;
 use Laraveldaily\Quickadmin\Builders\SeederBuilder;
+use Laraveldaily\Quickadmin\Builders\SidebarBuilder;
 use Laraveldaily\Quickadmin\Models\Files;
 use Laraveldaily\Quickadmin\Models\Menu;
 use Laraveldaily\Quickadmin\Models\ProjectMenus;
@@ -42,6 +44,12 @@ class JSZipController extends Controller {
 //		}
 //
 
+		$active_projects = Projects::findorfail($id);
+
+
+
+
+
 
 
 		$rootPath = 'C:\xampp\htdocs\adminCMS3\vendor\laraveldaily\quickadmin\src\Laravel\5';
@@ -52,7 +60,9 @@ class JSZipController extends Controller {
 		if(1>count($menus)){
 			return redirect()->back()->withMessage('There are no menu for this project');
 		}
-
+		if($active_projects->landing == null){
+			return 'Landing cannot be null';
+		}
 
 		if (file_exists(public_path('temp'))) {
 
@@ -71,9 +81,9 @@ class JSZipController extends Controller {
 			rmdir($dir);
 		}
 
-
 		$source = $rootPath;
-		$dest=  public_path('temp');
+
+		$destination=  public_path('temp');
 		//Create 'temp' Directory
 		mkdir(public_path('temp'));
 		foreach (
@@ -82,9 +92,9 @@ class JSZipController extends Controller {
 				\RecursiveIteratorIterator::SELF_FIRST) as $item
 		) {
 			if ($item->isDir()) {
-				mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), 0777);
+				mkdir($destination . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), 0777);
 			} else {
-				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+				copy($item, $destination . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
 			}
 		}
 
@@ -118,10 +128,7 @@ class JSZipController extends Controller {
 					$gate = new GateBuilder();
 					$gate->build($key, $this->getBetween($content, $start1, $end1));
 
-
-
 				}elseif($row->type == 'Migration'){
-
 
 					$destination =  public_path('temp').DIRECTORY_SEPARATOR .'database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR ; //migrations
 					copy($row->path, $destination.$row->filename);
@@ -129,7 +136,7 @@ class JSZipController extends Controller {
 					$destination =  public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.'Admin'.DIRECTORY_SEPARATOR ;
 					copy($row->path, $destination.$row->filename);
 				}elseif($row->type == 'Request'){
-					$destination =  public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Requests'.DIRECTORY_SEPARATOR.'Admin'.DIRECTORY_SEPARATOR ; //COntroller
+					$destination =  public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Requests'.DIRECTORY_SEPARATOR ; //Request Location
 					copy($row->path, $destination.$row->filename);
 				}elseif($row->type == 'View'){
 
@@ -146,31 +153,56 @@ class JSZipController extends Controller {
 
 			}
 
-
-
-
-
 		}
-//
+
+
+
+		$menus2 = Menu::with('children')->where('menu_type', '=', 2)->orderBy('position')->whereIn('id',$menus)->get();
+		//generate Gate for Menu2
+		foreach($menus2 as $key => $value){
+			$gate = new GateBuilder();
+			$gate->build($value->id, '');
+		}
+
+
 //		//create routes file
 		$routes = new RoutesBuilder();
 		$routes->build();
-//		return 'check the temp';
 
 
 		//Generate Seeds
 		$seeder = new DataSeederBuilder();
 		$seeder->build($tables);
 
+		//Generate Sidebar
+		$sidebar = new SidebarBuilder();
+		$sidebar->build();
+
+		//Generate Project Config
+		$config = new ConfigBuilder();
+		$config->build($id);
 
 
-
-		// Get real path for our folder__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Laravel' . DIRECTORY_SEPARATOR . '5'. DIRECTORY_SEPARATOR
 		$active_projects = Projects::findorfail($id);
 
-		$menu_name =
+
 		$filename = strtolower(camel_case($active_projects->name));
 
+
+//		//Generate Seeds for Roles and Users
+		$tables2 = array(
+			[
+				'tableName' => 'roles',
+				'modelName' => 'Role'
+			],
+			[
+				'tableName' => 'users',
+				'modelName' => 'User'
+			]
+
+		);
+		$seeder = new DataSeederBuilder();
+		$seeder->build($tables2);
 
 		// Initialize archive object
 		$zip = new ZipArchive();

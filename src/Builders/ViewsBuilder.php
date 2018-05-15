@@ -9,6 +9,7 @@ use Laraveldaily\Quickadmin\Cache\QuickCache;
 class ViewsBuilder
 {
     // Templates
+    protected $formFieldsShow;
     private $template; // Array: [0]->index, [1]->edit, [2]->create
     // Variables
     private $fields;
@@ -46,6 +47,7 @@ class ViewsBuilder
             0 => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'view_index',
             1 => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'view_edit',
             2 => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'view_create',
+            3 => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'view_show',
         ];
         $this->name     = $cached['name'];
         $this->fields   = $cached['fields'];
@@ -67,7 +69,8 @@ class ViewsBuilder
         $this->template = [
             0 => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'customView_index',
             1 => '',
-            2 => ''
+            2 => '',
+            3 => ''
         ];
         $this->names();
         $template = (array)$this->loadTemplate();
@@ -84,6 +87,7 @@ class ViewsBuilder
             0 => $this->template[0] != '' ? file_get_contents($this->template[0]) : '',
             1 => $this->template[1] != '' ? file_get_contents($this->template[1]) : '',
             2 => $this->template[2] != '' ? file_get_contents($this->template[2]) : '',
+            3 => $this->template[3] != '' ? file_get_contents($this->template[3]) : '',
         ];
     }
 
@@ -99,6 +103,8 @@ class ViewsBuilder
         $this->buildTable();
         $this->buildCreateForm();
         $this->buildEditForm();
+        $this->buildShowForm();
+
 
         // Index template
         $template[0] = str_replace([
@@ -154,6 +160,23 @@ class ViewsBuilder
             $this->formFieldsCreate,
             $this->files != 0 ? "'files' => true, " : ''
         ], $template[2]);
+
+        // Show template
+        $template[3] = str_replace([
+            '$NAME$',
+            '$ROUTE$',
+            '$RESOURCE$',
+            '$FORMFIELDS$',
+            '$MODEL$',
+            '$FILES$'
+        ], [
+            $this->title,
+            $this->route,
+            $this->resource,
+            $this->formFieldsShow,
+            $this->model,
+            $this->files != 0 ? "'files' => true, " : ''
+        ], $template[3]);
 
         return $template;
     }
@@ -266,53 +289,114 @@ class ViewsBuilder
     {
         $form = '';
         foreach ($this->fields as $field) {
-            $title = addslashes($field->label);
-            $label = $field->title;
-            if (in_array($field->validation,
-                    $this->starred) && $field->type != 'password' && $field->type != 'file' && $field->type != 'photo'
-            ) {
-                $title .= '*';
-            }
-            if ($field->type == 'relationship') {
-                $label = $field->relationship_name . '_id';
-            }
+            if($field->edit == 1){
+                $title = addslashes($field->label);
+                $label = $field->title;
+                if (in_array($field->validation,
+                        $this->starred) && $field->type != 'password' && $field->type != 'file' && $field->type != 'photo'
+                ) {
+                    $title .= '*';
+                }
+                if ($field->type == 'relationship') {
+                    $label = $field->relationship_name . '_id';
+                }
 
-            if ($field->type == 'relationship_many') {
-                $label = $field->relationship_name;
-            }
-            if ($field->type == 'checkbox') {
-                $field->default = '$' . $this->model . '->' . $label . ' == 1';
-            }
-            $temp = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR . $field->type);
-            $temp = str_replace([
-                'old(\'$LABEL$\')',
-                '$LABEL$',
-                '$TITLE$',
-                '$VALUE$',
-                '$STATE$',
-                '$SELECT$',
-                '$TEXTEDITOR$',
-                '$HELPER$',
-                '$WIDTH$',
-                '$HEIGHT$',
-            ], [
-                ($field->type == 'relationship_many') ? '$old_'.strtolower($this->relationshipName) :'old(\'$LABEL$\',$' . $this->resource . '->' . $label . ')',
-                ($field->type == 'relationship_many') ? $label. '_id[]' :$label,
-                $title,
-                $field->type != 'radio' ?
-                    $field->value != '' ? ', "' . $field->value . '"' : ''
-                    : "'$field->value'",
-                $field->default,
-                '$' . $field->relationship_name,
-                $field->texteditor == 1 ? ' mceEditor' : ' mceNoEditor',
-                $this->helper($field->helper),
-                $field->dimension_w,
-                $field->dimension_h,
+                if ($field->type == 'relationship_many') {
+                    $label = $field->relationship_name;
+                }
+                if ($field->type == 'checkbox') {
+                    $field->default = '$' . $this->model . '->' . $label . ' == 1';
+                }
+                $temp = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR . $field->type);
+                $temp = str_replace([
+                    'old(\'$LABEL$\')',
+                    '$LABEL$',
+                    '$TITLE$',
+                    '$VALUE$',
+                    '$STATE$',
+                    '$SELECT$',
+                    '$TEXTEDITOR$',
+                    '$HELPER$',
+                    '$WIDTH$',
+                    '$HEIGHT$',
+                ], [
+                    ($field->type == 'relationship_many') ? '$old_'.strtolower($this->relationshipName) :'old(\'$LABEL$\',$' . $this->resource . '->' . $label . ')',
+                    ($field->type == 'relationship_many') ? $label. '_id[]' :$label,
+                    $title,
+                    $field->type != 'radio' ?
+                        $field->value != '' ? ', "' . $field->value . '"' : ''
+                        : "'$field->value'",
+                    $field->default,
+                    '$' . $field->relationship_name,
+                    $field->texteditor == 1 ? ' mceEditor' : ' mceNoEditor',
+                    $this->helper($field->helper),
+                    $field->dimension_w,
+                    $field->dimension_h,
 
-            ], $temp);
-            $form .= $temp;
+                ], $temp);
+                $form .= $temp;
+            }
         }
         $this->formFieldsEdit = $form;
+    }
+
+    /**
+     *  Build show.blade.php form
+     */
+    private function buildShowForm()
+    {
+
+        $form = '';
+        foreach ($this->fields as $field) {
+            if($field->show == 1){
+                $title = addslashes($field->label);
+                $label = $field->title;
+                if (in_array($field->validation,
+                        $this->starred) && $field->type != 'password' && $field->type != 'file' && $field->type != 'photo'
+                ) {
+                    $title .= '*';
+                }
+                if ($field->type == 'relationship') {
+                    $label = $field->relationship_name . '_id';
+                }
+
+                if ($field->type == 'relationship_many') {
+                    $label = $field->relationship_name;
+                }
+                if ($field->type == 'checkbox') {
+                    $field->default = '$' . $this->model . '->' . $label . ' == 1';
+                }
+                $temp = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR . $field->type);
+                $temp = str_replace([
+                    'old(\'$LABEL$\')',
+                    '$LABEL$',
+                    '$TITLE$',
+                    '$VALUE$',
+                    '$STATE$',
+                    '$SELECT$',
+                    '$TEXTEDITOR$',
+                    '$HELPER$',
+                    '$WIDTH$',
+                    '$HEIGHT$',
+                ], [
+                    ($field->type == 'relationship_many') ? '$old_'.strtolower($this->relationshipName) :'old(\'$LABEL$\',$' . $this->resource . '->' . $label . ')',
+                    ($field->type == 'relationship_many') ? $label. '_id[]' :$label,
+                    $title,
+                    $field->type != 'radio' ?
+                        $field->value != '' ? ', "' . $field->value . '"' : ''
+                        : "'$field->value'",
+                    $field->default,
+                    '$' . $field->relationship_name,
+                    $field->texteditor == 1 ? ' mceEditor' : ' mceNoEditor',
+                    $this->helper($field->helper),
+                    $field->dimension_w,
+                    $field->dimension_h,
+
+                ], $temp);
+                $form .= $temp;
+            }
+        }
+        $this->formFieldsShow = $form;
     }
 
     /**
@@ -322,44 +406,46 @@ class ViewsBuilder
     {
         $form = '';
         foreach ($this->fields as $field) {
-            $title = addslashes($field->label);
-            $key   = $field->title;
-            if (in_array($field->validation, $this->starred)) {
-                $title .= '*';
-            }
-            if ($field->type == 'relationship') {
-                $key = $field->relationship_name . '_id';
-            }
+            if($field->add == 1){
+                $title = addslashes($field->label);
+                $key   = $field->title;
+                if (in_array($field->validation, $this->starred)) {
+                    $title .= '*';
+                }
+                if ($field->type == 'relationship') {
+                    $key = $field->relationship_name . '_id';
+                }
 
-            if ($field->type == 'relationship_many') {
-                $key = $field->relationship_name . '_id[]';
-            }
+                if ($field->type == 'relationship_many') {
+                    $key = $field->relationship_name . '_id[]';
+                }
 
-            $temp = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR . $field->type);
-            $temp = str_replace([
-                '$LABEL$',
-                '$TITLE$',
-                '$VALUE$',
-                '$STATE$',
-                '$SELECT$',
-                '$TEXTEDITOR$',
-                '$HELPER$',
-                '$WIDTH$',
-                '$HEIGHT$',
-            ], [
-                $key,
-                $title,
-                $field->type != 'radio' ?
-                    $field->value != '' ? ', ' . $field->value : ''
-                    : "'$field->value'",
-                $field->default,
-                '$' . $field->relationship_name,
-                $field->texteditor == 1 ? ' mceEditor' : ' mceNoEditor',
-                $this->helper($field->helper),
-                $field->dimension_w,
-                $field->dimension_h,
-            ], $temp);
-            $form .= $temp;
+                $temp = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR . $field->type);
+                $temp = str_replace([
+                    '$LABEL$',
+                    '$TITLE$',
+                    '$VALUE$',
+                    '$STATE$',
+                    '$SELECT$',
+                    '$TEXTEDITOR$',
+                    '$HELPER$',
+                    '$WIDTH$',
+                    '$HEIGHT$',
+                ], [
+                    $key,
+                    $title,
+                    $field->type != 'radio' ?
+                        $field->value != '' ? ', ' . $field->value : ''
+                        : "'$field->value'",
+                    $field->default,
+                    '$' . $field->relationship_name,
+                    $field->texteditor == 1 ? ' mceEditor' : ' mceNoEditor',
+                    $this->helper($field->helper),
+                    $field->dimension_w,
+                    $field->dimension_h,
+                ], $temp);
+                $form .= $temp;
+            }
         }
         $this->formFieldsCreate = $form;
     }
@@ -435,6 +521,18 @@ class ViewsBuilder
         $file->updated_at = Carbon::now();
         $file->menu_id = $this->menuId;
         $file->filename = $this->path . DIRECTORY_SEPARATOR . 'create.blade.php';
+        $file->save();
+
+        file_put_contents(base_path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . $this->path . DIRECTORY_SEPARATOR . 'show.blade.php'),
+            $template[3]);
+
+        $file = new Files();
+        $file->path = base_path('resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . $this->path . DIRECTORY_SEPARATOR . 'show.blade.php');
+        $file->type = "View";
+        $file->created_at = Carbon::now();
+        $file->updated_at = Carbon::now();
+        $file->menu_id = $this->menuId;
+        $file->filename = $this->path . DIRECTORY_SEPARATOR . 'show.blade.php';
         $file->save();
 
     }

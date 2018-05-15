@@ -50,8 +50,8 @@
 
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="box box-default">
+        <div class="col-md-12">
+            <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Project</h3>
                 </div>
@@ -61,6 +61,7 @@
                         <th>ID</th>
                         <th>Project Name</th>
                         <th>Version</th>
+                        <th>Skin</th>
                         <th>
                             <div class="btn-group tools">
                                 <button action="form" type="button" onclick="location.href ='{{route('projects.create')}}'" class="btn btn-default btn-sm fa">+</button>
@@ -85,16 +86,17 @@
 
                         <tbody>
                         @foreach($projects as $row)
-                        <tr>
-                            <td>{{$row->id}}</td>
-                            <td>{{$row->title}}</td>
-                            <td>{{$row->version}}</td>
-                            <td>
-                                <a href="{{route('projects.active', $row->id)}}" class="btn {{($row->active == 1)? 'btn-primary':'btn-default'}} btn-xs btn-flat">Active</a>
-                                <a href="{{route('projects.edit', $row->id)}}" class="btn btn-info btn-xs btn-flat">Edit</a>
-                                <a href="{{route('download.zip', $row->id)}}" class="btn btn-success btn-xs btn-flat">Download</a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>{{$row->id}}</td>
+                                <td>{{$row->title}}</td>
+                                <td>{{$row->version}}</td>
+                                <td>{{ $row->skin }}</td>
+                                <td>
+                                    <a href="{{route('projects.active', $row->id)}}" class="btn {{($row->active == 1)? 'btn-primary':'btn-default'}} btn-xs btn-flat">Active</a>
+                                    <a href="{{route('projects.edit', $row->id)}}" class="btn btn-info btn-xs btn-flat">Edit</a>
+                                    <a href="{{route('download.zip', $row->id)}}" class="btn btn-success btn-xs btn-flat">Download</a>
+                                </td>
+                            </tr>
                         @endforeach
                         </tbody>
                     </table>
@@ -102,6 +104,10 @@
                 </div>
             </div>
         </div>
+
+
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <div class="box box-default">
                 <div class="box-header with-border">
@@ -254,10 +260,7 @@
                 </div>
             </div>
         </div>
-
-    </div>
-    <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">Menu Type</h3>
@@ -304,6 +307,26 @@
 
         @stop
         @section('javascript')
+            <script>
+                var table = $('#ProjectsDataTable').DataTable({"columnDefs":[{"width":"30px","targets":0,"searchable":false,"orderable":false,"visible":true},{"targets":1,"searchable":true,"orderable":true,"visible":true},{"targets":2,"searchable":true,"orderable":true,"visible":true},{"targets":3,"searchable":true,"orderable":true,"visible":true},{"width":"150px","targets":4,"searchable":false,"orderable":false,"visible":true}]});
+                $('.toggle-vis').on('click', function (e) {
+                    e.preventDefault();
+
+                    // Get the column API object
+                    var column = table.column($(this).attr('data-column'));
+
+                    // Toggle the visibility
+                    column.visible(!column.visible());
+
+
+                    if (!column.visible() == true) {
+                        $(this).removeClass('Checked');
+                    } else {
+                        $(this).addClass('Checked');
+                    }
+
+                });
+            </script>
             <script>
                 $(document).ready(function () {
                     $('.delete').click(function (e) {

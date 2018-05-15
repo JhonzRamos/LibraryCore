@@ -52,7 +52,7 @@
                     </a>
                 </li>
                  <li class="treeview @if(Request::path() == 'projects') active  menu-open @endif  ">
-                    <a href="{{ url(config('quickadmin.route').'/projects') }}">
+                    <a href="{{ route(config('quickadmin.route').'/project') }}">
                         <i class="fa fa-files-o"></i>
                         <span class="title">Projects</span>
                     </a>
@@ -60,7 +60,7 @@
                  <li class="treeview @if(Request::path() == 'forms') active  menu-open @endif  ">
                     <a href="{{ url(config('quickadmin.route').'/forms') }}">
                         <i class="fa fa-files-o"></i>
-                        <span class="title">Form Builder</span>
+                        <span class="title">Projects</span>
                     </a>
                 </li>
                  <li class="treeview @if(Request::path() == 'extensions') active  menu-open @endif  ">

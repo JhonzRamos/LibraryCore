@@ -136,7 +136,7 @@ class QuickadminMenuController extends Controller
     public function insertCrud(Request $request)
     {
 
-//        return $request->permissions;
+//        return $request->all();
         $roles = Role::pluck('id')->all();
 
 
@@ -268,6 +268,9 @@ class QuickadminMenuController extends Controller
                 'texteditor'         => $request->f_texteditor[$index],
                 'size'               => $request->f_size[$index] * 1024,
                 'list'               => $request->f_list[$index],
+                'add'                => $request->f_add[$index],
+                'show'               => $request->f_show[$index],
+                'edit'               => $request->f_edit[$index],
                 'search'             => $request->f_search[$index],
                 'dimension_h'        => $request->f_dimension_h[$index],
                 'dimension_w'        => $request->f_dimension_w[$index],
@@ -393,14 +396,14 @@ class QuickadminMenuController extends Controller
      */
     public function insertParent(Request $request)
     {
+
+    //    return $request->all();
         $validation = Validator::make($request->all(), [
             'title' => 'required',
         ]);
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
-
-
 
         $menu = Menu::create([
             'position'  => 0,
@@ -420,6 +423,33 @@ class QuickadminMenuController extends Controller
             'menu_id'         => $menu->id,
             'project_id'      => $active->id,
         ]);
+
+        foreach ($request->permissions as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                RolePermissions::create([
+                    'role_id' => $key,
+                    'menu_id' => $this->menuId,
+                    'permission_id' =>  Permissions::where('name', ucfirst($key1))->pluck('id')[0]
+                ]);
+            }
+        }
+
+        //Create Gates
+        $permissions = RolePermissions::where('menu_id', $menu->id)->get();
+        $camelCase      = ucfirst(Str::camel($menu->name));
+        $name    = strtolower($camelCase);
+
+        $access = array();
+
+        foreach($permissions as $row){
+            if($row->permission_id == 1) { //access
+                $access[] = $row->role_id;
+            }
+        }
+
+
+        $gate = new ProviderBuilder();
+        $gate->build($name.'_access', $access);
 
 
         return redirect()->route('menu');

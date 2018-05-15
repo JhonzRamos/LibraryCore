@@ -16,7 +16,7 @@ class FormsController extends Controller {
 	public function index()
     {
 
-		return view('qa.forms.index');
+		return view('qa::forms.index');
 	}
 
 }

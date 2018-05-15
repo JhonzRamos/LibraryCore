@@ -196,15 +196,27 @@ class GateBuilder
         $name = $this->menu_name;
         $template ='';
 
-        foreach($permissions as $key=>$value){
-            $template .= 'Gate::define(\''.$name.'_'.$value.'\', function ($user) { '."\r\n";
+        if(empty($this->create) && empty($this->view) && empty($this->edit)  && empty($this->delete)){
+            $template .= 'Gate::define(\''.$name.'_access\', function ($user) { '."\r\n";
             $template .= '            ';
-            $template .= ' return in_array($user->role_id, ['.implode(",",$roles[$key]).']);'."\r\n";
+            $template .= ' return in_array($user->role_id, ['.implode(",",$roles[0]).']);'."\r\n";
             $template .= '       ';
             $template .= ' });'."\r\n";
             $template .= '        ';
+        }else{
+            foreach($permissions as $key=>$value){
+                $template .= 'Gate::define(\''.$name.'_'.$value.'\', function ($user) { '."\r\n";
+                $template .= '            ';
+                $template .= ' return in_array($user->role_id, ['.implode(",",$roles[$key]).']);'."\r\n";
+                $template .= '       ';
+                $template .= ' });'."\r\n";
+                $template .= '        ';
+
+            }
 
         }
+
+
 
         $template .= "//APPEND//";
 
@@ -214,7 +226,9 @@ class GateBuilder
     private function model()
     {
         $template = '';
-        $template .= 'use App\\'.$this->model_name.';'."\r\n";
+        if(empty($this->create) && empty($this->view) && empty($this->edit)  && empty($this->delete)) {
+            $template .= '';
+        }
         $template .= "//MODEL//";
         return $template;
     }

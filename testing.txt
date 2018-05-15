@@ -100,12 +100,22 @@
  *sidebar with permissions
  +inverse seeding
  +routes name
- + removed trans in view and model
+ +removed trans in view and model
  +update DataTableSeed.php
  +route file
- *sidebar fix
- *dependencies auth|login|layouts|master|views|model|controllers|
+ +sidebar fix
+ +dependencies auth|login|layouts|master|views|model|controllers|
  +update AuthServiceProvider
  *remove Gates when deleted
- *create gate for exported menu
+ +create gate for exported menu
+ +parent controller access and permission
+ *custom CRUD view access and permission
+ +Login View
+ +Set Home
+ *fix Routes for Login Logout ChangePassword
+ +fix Request
+ +seeder for Roles and Users
+ +show template
+ +
+
 

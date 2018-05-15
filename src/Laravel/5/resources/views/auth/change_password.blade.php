@@ -1,7 +1,7 @@
-@extends('layouts.app')
-
+@extends('admin.layouts.master')
+@section('title', 'Change Password')
 @section('content')
-	<h3 class="page-title">@lang('quickadmin.qa_change_password')</h3>
+	<h3 class="page-title">Change Password</h3>
 
 	@if(session('success'))
 		<!-- If password successfully show message -->

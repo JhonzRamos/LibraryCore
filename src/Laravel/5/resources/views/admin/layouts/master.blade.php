@@ -6,8 +6,7 @@
     @include('admin.partials.head')
 </head>
 
-
-<body class="skin-red sidebar-mini">
+<body class="{{config('app.skin')}} sidebar-mini">
 
 <div id="wrapper">
 
@@ -28,7 +27,7 @@
     </div>
 </div>
 
-{!! Form::open(['route' => 'logout', 'style' => 'display:none;', 'id' => 'logout']) !!}
+{!! Form::open(['route' => 'auth.logout', 'style' => 'display:none;', 'id' => 'logout']) !!}
 <button type="submit">Logout</button>
 {!! Form::close() !!}
 

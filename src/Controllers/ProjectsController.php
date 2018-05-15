@@ -4,7 +4,11 @@ namespace Laraveldaily\Quickadmin\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use App\ProjectSettings;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Laraveldaily\Quickadmin\Models\Menu;
+use Laraveldaily\Quickadmin\Models\ProjectMenus;
 use Laraveldaily\Quickadmin\Models\Projects;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Schema;
@@ -26,10 +30,9 @@ class ProjectsController extends Controller {
 	public function index()
     {
 
-		return 'test';
         $projects = Projects::all();
 
-		return view('qa.projects.index', compact('projects'));
+		return view('qa::projects.index', compact('projects'));
 	}
 
 	/**
@@ -40,7 +43,10 @@ class ProjectsController extends Controller {
 	public function create()
 	{
 
-	    return view('qa::projects.create');
+		$skin = Projects::$skin;
+
+
+		return view('qa::projects.create', compact('skin'));
 	}
 
 	/**
@@ -52,10 +58,15 @@ class ProjectsController extends Controller {
 	public function show($id)
 	{
 		$projects = Projects::find($id);
-		
-		
+		$active = Projects::where('active', 1)->first();
+		$menus1 = ProjectMenus::where('project_id',$active->id)->pluck('menu_id');
+		$skin = Projects::$skin;
+		$models = Menu::with('children')->where('menu_type', '=', 1)->orderBy('position')->whereIn('id',$menus1)->get();
+
+
+
 		$view = "view";
-		return view('qa::projects.edit', compact('projects', 'view' ));
+		return view('qa::projects.edit', compact('projects', 'view',  'skin', 'models'));
 	}
 
 
@@ -66,6 +77,8 @@ class ProjectsController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+
+
 		$validation = Validator::make($request->all(), [
 			'name' => 'required'
 		]);
@@ -88,9 +101,14 @@ class ProjectsController extends Controller {
 	{
 
 		$projects = Projects::find($id);
-	    
-	    
-		return view('qa::projects.edit', compact('projects'));
+		$active = Projects::where('active', 1)->first();
+		$menus1 = ProjectMenus::where('project_id',$active->id)->pluck('menu_id');
+		$skin = Projects::$skin;
+		$models = Menu::where('menu_type', '=', 1)->orderBy('position')->whereIn('id',$menus1)->pluck('title', 'name');
+
+
+//		$this->className = ucfirst(Str::camel($this->name)); //saving
+		return view('qa::projects.edit', compact('projects', 'skin', 'models'));
 	}
 
 	/**
@@ -101,6 +119,7 @@ class ProjectsController extends Controller {
 	 */
 	public function update($id, Request $request)
 	{
+		$request->landing = $this->className = ucfirst(Str::camel($request->landing)); //saving
 
 		$validation = Validator::make($request->all(), [
 			'name' => 'required',

@@ -24,9 +24,16 @@ class Projects extends Model {
     protected $fillable = [
           'name',
           'title',
-          'version'
+          'version',
+          'skin',
+          'description',
+          'landing'
     ];
-    
+
+
+    public static $skin = ["skin-blue" => "skin-blue", "skin-black" => "skin-black", "skin-purple" => "skin-purple", "skin-green" => "skin-green", "skin-red" => "skin-red", "skin-yellow" => "skin-yellow", "skin-blue-light" => "skin-blue-light", "skin-black-light" => "skin-black-light", "skin-purple-light" => "skin-purple-light", "skin-green-light" => "skin-green-light", "skin-red-light" => "skin-red-light", "skin-yellow-light" => "skin-yellow-light", ];
+
+
 
     public static function boot()
     {

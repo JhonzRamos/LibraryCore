@@ -210,7 +210,7 @@ class RequestBuilder
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
         $file->menu_id = $this->menuId;
-        $file->filename =  $this->fileName;
+        $file->filename =  'Create' . $this->fileName;
         $file->save();
 
         $file = new Files();
@@ -219,7 +219,7 @@ class RequestBuilder
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
         $file->menu_id = $this->menuId;
-        $file->filename =  $this->fileName;
+        $file->filename =  'Update' . $this->fileName;
         $file->save();
     }
 
