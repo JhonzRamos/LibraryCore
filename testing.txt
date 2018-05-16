@@ -40,11 +40,11 @@
  *radio table render value
  *true ==
  *false ==
- *show in edit
- *show in form
+ +show in edit
+ +show in form
  *add ? fillable
  *Validation Create Request
- *Update Request edit remove required in UpdateRequest
+ +Update Request edit remove required in UpdateRequest
  +checkbox list
  +role_permission
   >id
@@ -69,7 +69,7 @@
  * view trash Revive
 04/24/2018
  +Download as Zip
- *copy the generated files the
+ +copy the generated files the
  *add key value for radio
  +algorithm for editing
   >save the fieldinfo
@@ -111,11 +111,15 @@
  +parent controller access and permission
  *custom CRUD view access and permission
  +Login View
- +Set Home
+ +Set Homex
  *fix Routes for Login Logout ChangePassword
  +fix Request
  +seeder for Roles and Users
  +show template
- +
+ +sidebar active sub adminlte>js>main.js
+ *show text area with mce in list
+ *disable tiny mce
+ *add a sub module to a module
+ *review gate for menu_type 3
 
 

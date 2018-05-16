@@ -2,11 +2,9 @@
 <html lang="en">
 
 <head>
-<<<<<<< HEAD
-    @include('admin.partials.header')
-=======
+
     @include('admin.partials.head')
->>>>>>> ec54dd9f4c3938544488007d46b3849c321ab4be
+
 </head>
 
 <body class="hold-transition login-page">
@@ -19,11 +17,9 @@
         <p class="login-box-msg">Sign in to start your session</p>
         @if (count($errors) > 0)
             <div class="alert alert-danger">
-<<<<<<< HEAD
-                <strong>{{ trans('quickadmin::auth.whoops') }}</strong> {{ trans('quickadmin::auth.some_problems_with_input') }}
-=======
+
                 <strong>Whoops!</strong>There are problems in your inputs
->>>>>>> ec54dd9f4c3938544488007d46b3849c321ab4be
+
                 <br><br>
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -33,15 +29,11 @@
             </div>
         @endif
         <form
-<<<<<<< HEAD
-              role="form"
-              method="POST"
-              action="{{ url('login') }}">
-=======
+
                 role="form"
                 method="POST"
                 action="{{ url('login') }}">
->>>>>>> ec54dd9f4c3938544488007d46b3849c321ab4be
+
             <input type="hidden"
                    name="_token"
                    value="{{ csrf_token() }}">
@@ -62,11 +54,8 @@
                 <div class="col-xs-8">
                     <div class="checkbox icheck">
                         <label>
-<<<<<<< HEAD
-                            <input type="checkbox"> {{ trans('quickadmin::auth.login-remember_me') }}
-=======
                             <input type="checkbox"> Remember Me
->>>>>>> ec54dd9f4c3938544488007d46b3849c321ab4be
+
                         </label>
                     </div>
                 </div>
@@ -74,33 +63,13 @@
                 <div class="col-xs-4">
                     <button type="submit"
                             class="btn btn-primary btn-block btn-flat">
-<<<<<<< HEAD
-                        {{ trans('quickadmin::auth.login-btnlogin') }}
-=======
                         Login
->>>>>>> ec54dd9f4c3938544488007d46b3849c321ab4be
+
                     </button>
                 </div>
                 <!-- /.col -->
             </div>
         </form>
-<<<<<<< HEAD
-
-        <!-- /.social-auth-links -->
-
-        <a href="#">I forgot my password</a><br>
-        <a href="register.html" class="text-center">Register a new membership</a>
-
-    </div>
-    <!-- /.login-box-body -->
-</div>
-<!-- jQuery 3 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="adminlte/bootstrap/js/bootstrap.min.js"></script>
-<!-- iCheck -->
-<script src="adminlte/plugins/iCheck/icheck.min.js"></script>
-=======
 
         <!-- /.social-auth-links -->
 
@@ -113,7 +82,6 @@
 
 @include('admin.partials.javascripts')
 
->>>>>>> ec54dd9f4c3938544488007d46b3849c321ab4be
 <script>
     $(function () {
         $('input').iCheck({

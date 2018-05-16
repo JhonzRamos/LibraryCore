@@ -98,7 +98,7 @@ class SidebarBuilder
                     $compact .='                    <ul class="treeview-menu">'. "\r\n";
                     foreach($menu['children'] as $child){
                         $compact .='                    @can(\''.strtolower(Str::camel($child->name)).'_access\')'. "\r\n";
-                        $compact .='                        <li class="@if(Request::segment(2) == \''.strtolower(Str::camel($child->name)).'\' ) active menu-open @endif">'. "\r\n";
+                        $compact .='                        <li class="@if(Request::segment(2) == \''.strtolower(Str::camel($child->name)).'\' ) active active-sub @endif">'. "\r\n";
                         $compact .='                            <a href="{{ route(\'admin.'.strtolower($child->name).'.index\') }}">'. "\r\n";
                         $compact .='                                <i class="fa '.$child->icon.'"></i>'. "\r\n";
                         $compact .='                                <span class="title">'.$child->title.'</span>'. "\r\n";

@@ -21,7 +21,7 @@
                     </ul>
                 </div>
             @endif
-    <div class="box">
+    <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title"><i class="fa $ICON$ fa-fw"></i>$NAME$</h3>
         </div>

@@ -4,7 +4,7 @@ $(document).ready(function () {
     if (activeSub.length > 0) {
         activeSub.parent().show();
         activeSub.parent().parent().find('.arrow').addClass('open');
-        activeSub.parent().parent().addClass('open');
+        activeSub.parent().parent().addClass('open').addClass('active');
     }
     window.dtDefaultOptions = {
         retrieve: true,

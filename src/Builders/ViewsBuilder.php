@@ -31,7 +31,7 @@ class ViewsBuilder
         'required|unique'
     ];
     // Menu Id
-    private $menuId;
+    private $menu_id;
     private $title ;
     private $icon ;
 
@@ -53,7 +53,7 @@ class ViewsBuilder
         $this->fields   = $cached['fields'];
         $this->files    = $cached['files'];
         $this->relationshipName     = $cached['reference_table']; //many
-        $this->menuId     = $cached['menu_id'];
+        $this->menu_id     = $cached['menu_id'];
         $this->title     = $cached['title'];
         $this->icon     = $cached['icon'];
         $this->names();
@@ -63,8 +63,9 @@ class ViewsBuilder
         $this->publish($template);
     }
 
-    public function buildCustom($name)
+    public function buildCustom($name, $id)
     {
+        $this->menu_id      = $id;
         $this->name     = $name;
         $this->template = [
             0 => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'customView_index',
@@ -495,7 +496,7 @@ class ViewsBuilder
         $file->type = "View";
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
-        $file->menu_id = $this->menuId;
+        $file->menu_id = $this->menu_id;
         $file->filename = $this->path . DIRECTORY_SEPARATOR . 'index.blade.php';
         $file->save();
 
@@ -507,7 +508,7 @@ class ViewsBuilder
         $file->type = "View";
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
-        $file->menu_id = $this->menuId;
+        $file->menu_id = $this->menu_id;
         $file->filename = $this->path . DIRECTORY_SEPARATOR . 'edit.blade.php';
         $file->save();
 
@@ -519,7 +520,7 @@ class ViewsBuilder
         $file->type = "View";
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
-        $file->menu_id = $this->menuId;
+        $file->menu_id = $this->menu_id;
         $file->filename = $this->path . DIRECTORY_SEPARATOR . 'create.blade.php';
         $file->save();
 
@@ -531,7 +532,7 @@ class ViewsBuilder
         $file->type = "View";
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
-        $file->menu_id = $this->menuId;
+        $file->menu_id = $this->menu_id;
         $file->filename = $this->path . DIRECTORY_SEPARATOR . 'show.blade.php';
         $file->save();
 
@@ -551,7 +552,7 @@ class ViewsBuilder
         $file->type = "View";
         $file->created_at = Carbon::now();
         $file->updated_at = Carbon::now();
-        $file->menu_id = $this->menuId;
+        $file->menu_id = $this->menu_id;
         $file->filename = $this->path . DIRECTORY_SEPARATOR . 'index.blade.php';
         $file->save();
     }
