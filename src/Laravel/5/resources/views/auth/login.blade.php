@@ -2,7 +2,9 @@
 <html lang="en">
 
 <head>
+
     @include('admin.partials.head')
+
 </head>
 
 <body class="hold-transition login-page">
@@ -15,7 +17,9 @@
         <p class="login-box-msg">Sign in to start your session</p>
         @if (count($errors) > 0)
             <div class="alert alert-danger">
+
                 <strong>Whoops!</strong>There are problems in your inputs
+
                 <br><br>
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -25,9 +29,11 @@
             </div>
         @endif
         <form
+
                 role="form"
                 method="POST"
                 action="{{ url('login') }}">
+
             <input type="hidden"
                    name="_token"
                    value="{{ csrf_token() }}">
@@ -49,6 +55,7 @@
                     <div class="checkbox icheck">
                         <label>
                             <input type="checkbox"> Remember Me
+
                         </label>
                     </div>
                 </div>
@@ -57,6 +64,7 @@
                     <button type="submit"
                             class="btn btn-primary btn-block btn-flat">
                         Login
+
                     </button>
                 </div>
                 <!-- /.col -->

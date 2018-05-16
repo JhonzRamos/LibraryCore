@@ -27,7 +27,7 @@ if (Schema::hasTable('menus')) {
         ], function () use ($menus) {
             foreach ($menus as $menu) {
                 switch ($menu->menu_type) {
-                    case 1:
+                    case 1:{
                         Route::post(strtolower($menu->name) . '/massDelete', [
                             'as'   => strtolower($menu->name) . '.massDelete',
                             'uses' => 'Admin\\' . ucfirst(camel_case($menu->name)) . 'Controller@massDelete'
@@ -39,17 +39,21 @@ if (Schema::hasTable('menus')) {
                         Log::info('Route::resource('.'\''.strtolower($menu->name).'\''.','.'\''.'Admin\\'.ucfirst(camel_case($menu->name)). 'Controller'.')'.';' );
 
                         break;
-                    case 3:
+                    }
+
+                    case 3: {
                         Route::get(strtolower($menu->name), [
-                            'as'   => strtolower($menu->name) . '.index',
+                            'as' => strtolower($menu->name) . '.index',
                             'uses' => 'Admin\\' . ucfirst(camel_case($menu->name)) . 'Controller@index',
                         ]);
 
-                      //  Log::info('Route::get('.'\''.strtolower($menu->name).'\''.', ['. '\'as\'' .' => '. '\''.strtolower($menu->name) . '.index'.'\''.','.'\'uses\''.' => '.'\''.'Admin\\'.ucfirst(camel_case($menu->name)). 'Controller@index'.'\''.','.']);' );
+                        Log::info('Route::get(' . '\'' . strtolower($menu->name) . '\'' . ', [' . '\'as\'' . ' => ' . '\'' . strtolower($menu->name) . '.index' . '\'' . ',' . '\'uses\'' . ' => ' . '\'' . 'Admin\\' . ucfirst(camel_case($menu->name)) . 'Controller@index' . '\'' . ',' . ']);');
 
                         break;
+                    }
                 }
             }
+
         });
     }
 }

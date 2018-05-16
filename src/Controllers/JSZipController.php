@@ -44,6 +44,13 @@ class JSZipController extends Controller {
 //		}
 //
 
+
+
+
+
+
+
+
 		$active_projects = Projects::findorfail($id);
 
 
@@ -110,10 +117,8 @@ class JSZipController extends Controller {
 					$start = "\$table    = '";
 					$end = "';";
 
-
 					$start1 = 'class ';
 					$end1 = ' extends';
-
 
 					$tables[] = array(
 						'tableName' => $this->getBetween($content, $start, $end),
@@ -123,13 +128,11 @@ class JSZipController extends Controller {
 					$destination = public_path('temp').DIRECTORY_SEPARATOR .'app'.DIRECTORY_SEPARATOR  ; //model
 					copy($row->path, $destination.$row->filename);
 
-
 					//Create Gates
 					$gate = new GateBuilder();
 					$gate->build($key, $this->getBetween($content, $start1, $end1));
 
 				}elseif($row->type == 'Migration'){
-
 					$destination =  public_path('temp').DIRECTORY_SEPARATOR .'database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR ; //migrations
 					copy($row->path, $destination.$row->filename);
 				}elseif($row->type == 'Controller'){
@@ -169,10 +172,23 @@ class JSZipController extends Controller {
 		$routes = new RoutesBuilder();
 		$routes->build();
 
+		//Generate Seeds for Roles and Users
+		$tables2 = array(
+			[
+				'tableName' => 'roles',
+				'modelName' => 'Role'
+			],
+			[
+				'tableName' => 'users',
+				'modelName' => 'User'
+			]
 
+		);
+
+		$table_merged =array_merge($tables,$tables2);
 		//Generate Seeds
 		$seeder = new DataSeederBuilder();
-		$seeder->build($tables);
+		$seeder->build($table_merged);
 
 		//Generate Sidebar
 		$sidebar = new SidebarBuilder();
@@ -188,21 +204,6 @@ class JSZipController extends Controller {
 
 		$filename = strtolower(camel_case($active_projects->name));
 
-
-//		//Generate Seeds for Roles and Users
-		$tables2 = array(
-			[
-				'tableName' => 'roles',
-				'modelName' => 'Role'
-			],
-			[
-				'tableName' => 'users',
-				'modelName' => 'User'
-			]
-
-		);
-		$seeder = new DataSeederBuilder();
-		$seeder->build($tables2);
 
 		// Initialize archive object
 		$zip = new ZipArchive();

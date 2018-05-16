@@ -420,7 +420,7 @@ class ModelBuilder
     public function set' . $camel . 'Attribute($input)
     {
         if($input != \'\') {
-            $this->attributes[\'' . $field->title . '\'] = Carbon::createFromFormat(config(\'quickadmin.date_format\'), $input)->format(\'Y-m-d\');
+            $this->attributes[\'' . $field->title . '\'] = Carbon::parse($input)->format(\'Y-m-d\');
         }else{
             $this->attributes[\'' . $field->title . '\'] = \'\';
         }
@@ -435,7 +435,7 @@ class ModelBuilder
     public function get' . $camel . 'Attribute($input)
     {
         if($input != \'0000-00-00\') {
-            return Carbon::createFromFormat(\'Y-m-d\', $input)->format(config(\'quickadmin.date_format\'));
+            return Carbon::parse($input)->format(\'Y-m-d\');
         }else{
             return \'\';
         }
@@ -459,7 +459,7 @@ class ModelBuilder
     public function set' . $camel . 'Attribute($input)
     {
         if($input != \'\') {
-            $this->attributes[\'' . $field->title . '\'] = Carbon::createFromFormat(config(\'quickadmin.date_format\') . \' \' . config(\'quickadmin.time_format\'), $input)->format(\'Y-m-d H:i:s\');
+            $this->attributes[\'' . $field->title . '\'] = Carbon::parse($input)->format(\'Y-m-d H:i:s\');
         }else{
             $this->attributes[\'' . $field->title . '\'] = \'\';
         }
@@ -474,7 +474,7 @@ class ModelBuilder
     public function get' . $camel . 'Attribute($input)
     {
         if($input != \'0000-00-00\') {
-            return Carbon::createFromFormat(\'Y-m-d H:i:s\', $input)->format(config(\'quickadmin.date_format\') . \' \' .config(\'quickadmin.time_format\'));
+            return Carbon::parse($input)->format(\'Y-m-d H:i:s\');
         }else{
             return \'\';
         }

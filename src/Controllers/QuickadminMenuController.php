@@ -483,13 +483,7 @@ class QuickadminMenuController extends Controller
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
-        // Create controller
-        $controllerBuilder = new ControllerBuilder();
-        $controllerBuilder->buildCustomCRUD($request->name);
 
-        // Create views
-        $viewsBuilder = new ViewsBuilder();
-        $viewsBuilder->buildCustom($request->name);
 
         $menu = Menu::create([
             'position'  => 0,
@@ -500,6 +494,34 @@ class QuickadminMenuController extends Controller
             'parent_id' => $request->parent_id ?: null,
         ]);
         $menu->roles()->sync($request->input('roles', []));
+
+        ///new settings//
+        $this->menuId = $menu->id;
+
+        $active = Projects::where('active', 1)->first();
+
+        ProjectMenus::create([
+            'menu_id'         => $menu->id,
+            'project_id'      => $active->id,
+        ]);
+
+        foreach ($request->permissions as $key => $value) {
+            foreach ($value as $key1 => $value1) {
+                RolePermissions::create([
+                    'role_id' => $key,
+                    'menu_id' => $this->menuId,
+                    'permission_id' =>  Permissions::where('name', ucfirst($key1))->pluck('id')[0]
+                ]);
+            }
+        }
+
+        // Create controller
+        $controllerBuilder = new ControllerBuilder();
+        $controllerBuilder->buildCustomCRUD($request->name, $menu->id);
+
+        // Create views
+        $viewsBuilder = new ViewsBuilder();
+        $viewsBuilder->buildCustom($request->name, $menu->id);
 
         return redirect()->route('menu');
     }

@@ -74,8 +74,9 @@ class ControllerBuilder
             $this->publish($template);
     }
 
-    public function buildCustomCRUD($name)
+    public function buildCustomCRUD($name, $id)
     {
+        $this->menuId     = $id;
         $this->template = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'customController';
         $this->name     = $name;
         $this->names();
