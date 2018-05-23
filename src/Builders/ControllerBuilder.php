@@ -400,7 +400,8 @@ class ControllerBuilder
         $this->createRequestName = 'Create' . $camelName . 'Request';
         $this->updateRequestName = 'Update' . $camelName . 'Request';
 
-        $fileName       = $this->className . '.php';
+        $fileName       = $this->className. '.php';
+        // .$this->menuId.
         $this->fileName = $fileName;
     }
 

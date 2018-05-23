@@ -5,6 +5,7 @@ namespace $NAMESPACE$;
 use App\Http\Controllers\Controller;
 use Redirect;
 use Schema;
+use Illuminate\Support\Facades\Session;
 use App\$MODEL$;
 use App\Http\Requests\$CREATEREQUESTNAME$;
 use App\Http\Requests\$UPDATEREQUESTNAME$;
@@ -82,7 +83,7 @@ class $CLASS$ extends Controller {
         for($i = 0; $i < sizeof($request->$REFERENCENAME$_id); $i++){
         	$REFERENCEMODEL$::create([ '$RESOURCE$_id' => $model->id, '$REFERENCENAME$_id' =>intval($request->$REFERENCENAME$_id[$i])]);
         }
-
+		Session::flash('created', "A record has been created");
 		return redirect()->route('admin'.'.$COLLECTION$.index');
 	}
 
@@ -120,7 +121,7 @@ class $CLASS$ extends Controller {
         $FILESAVING$
 
 		$$RESOURCE$->update($request->all());
-
+		Session::flash('updated', "A record has been updated");
 		return redirect()->route('admin'.'.$COLLECTION$.index');
 	}
 
@@ -132,7 +133,7 @@ class $CLASS$ extends Controller {
 	public function destroy($id)
 	{
 		$MODEL$::destroy(decrypt($id));
-
+		Session::flash('deleted', "A record has been deleted");
 		return redirect()->route('admin'.'.$COLLECTION$.index');
 	}
 
@@ -154,7 +155,7 @@ class $CLASS$ extends Controller {
         } else {
             $MODEL$::whereNotNull('id')->delete();
         }
-
+		Session::flash('deleted', "Records has been deleted");
         return redirect()->route('admin'.'.$COLLECTION$.index');
     }
 

@@ -40,7 +40,8 @@
 <script src="{{asset('adminlte/plugins/fancybox/jquery.fancybox.js')}}"></script>
 <!--Alertify JS-->
 <script src="{{asset('quickadmin/js/alertify.min.js')}}"></script>
-
+<!-- Toastr -->
+<script src="{{asset('third_party/plugins/toastr-master/build/toastr.min.js')}}"></script>
 <script src="{{ url('/adminlte/js') }}/mapInput.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDS9Rw1-ETYlawypeBrNVJlM1k_r3vw038&amp;libraries=places&amp;callback=initialize" async="" defer=""></script>
 <script src="{{ url('adminlte/js') }}/bootstrap.min.js"></script>

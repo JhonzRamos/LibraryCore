@@ -211,7 +211,7 @@ class ViewsBuilder
             // Password fields are excluded from the table too.
             if (! in_array($field->title, $used)
                 && $field->type != 'password'
-                && $field->type != 'textarea'
+//                && $field->type != 'textarea'
                 && $field->list == 1
             ) {
                 $headings .= "<th>$field->label</th>\r\n";
@@ -248,6 +248,10 @@ class ViewsBuilder
                 }
                 elseif ($field->type == 'toggle') {
                     $columns .= '@if($row->'.$field->title.'== 1)<td><span class="label label-success">True</span></td>@else<td><span class="label label-danger">False</span></td>@endif'; ///file render
+                    $used[$field->title] = $field->title;
+                }
+                elseif ($field->type == 'textarea') {
+                    $columns .= '<td>{!! $row->' . $field->title . " !!}</td>\r\n"; ///file render
                     $used[$field->title] = $field->title;
                 }
                 else {

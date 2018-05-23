@@ -288,16 +288,16 @@
 //            showElements(e);
 
             // Show a checbox which enables/disables showing in list
-            $(e).parent().parent().find('.list2').hide();
-            $(e).parent().parent().find('.list_hid').val(0);
-            $(e).parent().parent().find('.add2').show();
-            $(e).parent().parent().find('.add_hid').val(0);
-            $(e).parent().parent().find('.edit2').show();
-            $(e).parent().parent().find('.edit_hid').val(0);
-            $(e).parent().parent().find('.show2').show();
-            $(e).parent().parent().find('.show_hid').val(0);
-            $(e).parent().parent().find('.search2').show();
-            $(e).parent().parent().find('.search_hid').val(0);
+            $(e).parent().parent().find('.list2').show().prop('checked', true);
+            $(e).parent().parent().find('.list_hid').val(1);
+            $(e).parent().parent().find('.add2').show().prop('checked', true);
+            $(e).parent().parent().find('.add_hid').val(1);
+            $(e).parent().parent().find('.edit2').show().prop('checked', true);
+            $(e).parent().parent().find('.edit_hid').val(1);
+            $(e).parent().parent().find('.show2').show().prop('checked', true);
+            $(e).parent().parent().find('.show_hid').val(1);
+            $(e).parent().parent().find('.search2').show().prop('checked', true);
+            $(e).parent().parent().find('.search_hid').val(1);
 //
 
 
@@ -307,61 +307,60 @@
                      console.log(val);
                      $(e).parent().parent().find('.list2').show();
 
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list_hid').val(1);
                     $(e).parent().parent().find('.value').show();
                     break;
                 case 'checkbox':
                     console.log(val);
                     $(e).parent().parent().find('.list2').show();
                     $(e).parent().parent().find('.list2').click();
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list_hid').val(1);
                     $(e).parent().parent().find('.default_c').show();
                     break;
                 case 'relationship':
                     console.log(val);
                     $(e).parent().parent().find('.list2').show();
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list_hid').val(1);
                     $(e).parent().parent().find('.relationship').show();
                     $(e).parent().parent().find('.title').hide().val('-');
                     break;
                 case 'relationship_many':
                     console.log(val);
                     $(e).parent().parent().find('.list2').show();
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list_hid').val(1);
                     $(e).parent().parent().find('.relationship').show();
                     $(e).parent().parent().find('.title').hide().val('_id');
                     break;
                 case 'textarea':
                     console.log(val);
-                    $(e).parent().parent().find('.list2').hide();
-                    $(e).parent().parent().find('.list2').prop('checked', false);
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list2').show();
+                    $(e).parent().parent().find('.list_hid').val(1);
                     $(e).parent().parent().find('.texteditor').show();
 
                     break;
                 case 'file':
                     console.log(val);
                     $(e).parent().parent().find('.list2').show();
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list_hid').val(1);
                     $(e).parent().parent().find('.size').show();
                     break;
                 case 'enum':
                     console.log(val);
                     $(e).parent().parent().find('.list2').show();
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list_hid').val(1);
                     $(e).parent().parent().find('.enum').show();
                     break;
                 case 'photo':
                     console.log(val);
                     $(e).parent().parent().find('.list2').show();
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list_hid').val(1);
                     $(e).parent().parent().find('.size').show();
                     $(e).parent().parent().find('.dimensions').show();
                     break;
                 default:
                     console.log(val);
                     $(e).parent().parent().find('.list2').show();
-                    $(e).parent().parent().find('.list_hid').val(0);
+                    $(e).parent().parent().find('.list_hid').val(1);
                     break;
             }
 

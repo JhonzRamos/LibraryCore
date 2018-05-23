@@ -91,23 +91,23 @@
     </td>
     <td>
         <input type="hidden" name="f_list[]" class="list_hid">
-        <input type="checkbox" value="0"  class="list2">
+        <input type="checkbox" value="1" checked class="list2">
     </td>
     <td>
         <input type="hidden" name="f_add[]" class="add_hid">
-        <input type="checkbox" value="0"  class="add2">
+        <input type="checkbox" value="1" checked class="add2">
     </td>
     <td>
         <input type="hidden" name="f_show[]" class="show_hid">
-        <input type="checkbox" value="0"  class="show2">
+        <input type="checkbox" value="1" checked  class="show2">
     </td>
     <td>
         <input type="hidden" name="f_edit[]" class="edit_hid">
-        <input type="checkbox" value="0"  class="edit2">
+        <input type="checkbox" value="1"  checked class="edit2">
     </td>
     <td>
         <input type="hidden" name="f_search[]"  class="search_hid">
-        <input type="checkbox" value="0"  class="search2">
+        <input type="checkbox" value="1" checked class="search2">
     </td>
 
     <td>

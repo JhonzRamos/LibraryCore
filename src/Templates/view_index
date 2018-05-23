@@ -26,27 +26,7 @@
             <h3 class="box-title"><i class="fa $ICON$ fa-fw"></i>$NAME$</h3>
         </div>
         <div class="box-body">
-            <div class="flexigrid">
-                <div class="row">
-                    <div class="tDiv3 col-md-12 " style="margin: 0 0 10px;text-align: left;">
-                        <div class="btn-group">
-                            <!-- Button Export  -->
-                            <a class="export-anchor btn btn-success"
-                               data-url="#"
-                               target="_blank">
-                                <i class="fa fa-file-excel-o"></i>
-                                <span class="export">Export</span>
-                            </a>
-                            <!-- Akhir Button Export  -->
-                            <a class="print-anchor btn btn-primary"
-                               data-url="#">
-                                <i class="fa fa-print"></i>
-                                <span class="print">Print</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <table class="table table-striped table-hover table-responsive table-bordered" id="$TABLE$DataTable">
                 <thead>
                     <tr>
@@ -57,7 +37,7 @@
                         <th>
                             <div class="btn-group tools">
                                 @can('$RESOURCE$_create')
-                                <button action="form" type="button" onclick="location.href ='{{ route('admin'.'.$ROUTE$.create') }}'" class="btn btn-default btn-sm fa">+</button>
+                                <button action="form" type="button" onclick="location.href ='{{ route('admin'.'.$ROUTE$.create') }}'" class="btn btn-default btn-sm fa fa-plus"></button>
                                 @endcan
                                 <div class="btn-group">
                                     <button class="btn dropdown-toggle btn-default btn-sm fa fa-bars"
@@ -156,8 +136,34 @@
 @section('javascript')
     <script>
         $(document).ready(function () {
+            @if (Session::has('message'))
+                 toastr.success("Successful", "{{Session::get('message')}}", {
+                        closeButton: true,
+                        positionClass: 'toast-bottom-right'
+                    });
+            @elseif(Session::has('created'))
+                  toastr.success("Successful", "{{Session::get('created')}}", {
+                        closeButton: true,
+                        positionClass: 'toast-bottom-right',
+                    });
+            @elseif(Session::has('updated'))
+                    toastr.success("Successful", "{{Session::get('updated')}}", {
+                        closeButton: true,
+                        positionClass: 'toast-bottom-right',
+                    });
+            @elseif(Session::has('deleted'))
+                 toastr.success("Successful", "{{Session::get('deleted')}}", {
+                        closeButton: true,
+                        positionClass: 'toast-bottom-right',
+                    });
+            @elseif ($errors->count() > 0)
+                 toastr.warning("Oops!", "There was an error occured", {
+                        closeButton: true,
+                        positionClass: 'toast-bottom-right'
+                    });
+            @endif
             $('#delete').click(function () {
-                if (window.confirm('Are you sure you want to delete the items?')) {
+                alertify.confirm("Are you sure you want to delete these items?", function () {
                     var send = $('#send');
                     var mass = $('.mass').is(":checked");
                     if (mass == true) {
@@ -172,7 +178,8 @@
                         send.val(JSON.stringify(toDelete));
                     }
                     $('#massDelete').submit();
-                }
+                }, function () {
+                });
             });
              var table = $('#$TABLE$DataTable').DataTable($COLUMN$);
                 $('.toggle-vis').on('click', function (e) {

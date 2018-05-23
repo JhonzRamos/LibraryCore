@@ -63,4 +63,5 @@
 <link rel="stylesheet" href="{{asset('adminlte/plugins/fancybox/jquery.fancybox.css')}}">
 <!--Alertify-->
 <link rel="stylesheet" href="{{asset('quickadmin/css/alertify.min.css')}}">
-
+<!-- Toastr style -->
+<link rel="stylesheet" href="{{asset('third_party/plugins/toastr-master/build/toastr.min.css')}}">

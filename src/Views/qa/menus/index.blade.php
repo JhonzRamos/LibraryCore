@@ -335,6 +335,11 @@
                         if (window.confirm('{{ trans('quickadmin::templates.templates-view_index-are_you_sure') }}')) {
                             location.href = $(this)["0"].dataset.route;
                         }
+
+                        {{--alertify.confirm("{{ trans('quickadmin::templates.templates-view_index-are_you_sure') }}", function (){--}}
+                            {{--location.href = $(this)["0"].dataset.route;--}}
+                        {{--}, function () {--}}
+                        {{--});--}}
                     });
                 });
             </script>
