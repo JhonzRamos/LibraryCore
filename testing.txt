@@ -116,14 +116,11 @@
  +fix Request
  +seeder for Roles and Users
  +show template
-<<<<<<< HEAD
- a
-=======
  +sidebar active sub adminlte>js>main.js
  *show text area with mce in list
  *disable tiny mce
  *add a sub module to a module
  *review gate for menu_type 3
->>>>>>> 7119d5ac78f89f1ea30959210c29a47784c79c4e
+
 
 

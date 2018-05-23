@@ -195,8 +195,9 @@ class GateBuilder
         );
         $name = $this->menu_name;
         $template ='';
-
+        $template .= '//'.$name.'_start//'."\r\n";
         if(empty($this->create) && empty($this->view) && empty($this->edit)  && empty($this->delete)){
+
             $template .= 'Gate::define(\''.$name.'_access\', function ($user) { '."\r\n";
             $template .= '            ';
             $template .= ' return in_array($user->role_id, ['.implode(",",$roles[0]).']);'."\r\n";
@@ -217,7 +218,7 @@ class GateBuilder
         }
 
 
-
+        $template .= '//'.$name.'_end//'."\r\n";
         $template .= "//APPEND//";
 
         return $template;
